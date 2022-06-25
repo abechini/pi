@@ -1,13 +1,13 @@
-package com.esprit.pi;
+package com.esprit.bankPi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PiApplication {
+public class PiBankApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PiApplication.class, args);
+		SpringApplication.run(PiBankApplication.class, args);
 	}
 
 }
