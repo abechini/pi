@@ -1,4 +1,4 @@
-package com.esprit.bankPi.resources.interfaces;
+package com.esprit.bankPi.resources;
 
 public interface IDepositService {
 
