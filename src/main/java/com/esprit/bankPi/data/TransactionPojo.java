@@ -14,18 +14,15 @@ import com.esprit.bankPi.enums.CurrencyEnum;
 
 public abstract class TransactionPojo {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	
 	int id;
 
 	int amount_in_number;
 
 	String amount;
 
-	@Temporal(TemporalType.DATE)
 	Date transaction_date;
 
-	@Enumerated(EnumType.STRING)
 	CurrencyEnum currency;
 
 }
