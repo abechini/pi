@@ -1,6 +1,10 @@
 package com.esprit.bankPi.data;
 
 import javax.persistence.*;
+
+import com.esprit.bankPi.enums.CivilState;
+import com.esprit.bankPi.enums.Sexe;
+
 import java.util.Date;
 import java.util.List;
 
@@ -22,10 +26,16 @@ public class Client {
     private String  address ;
     @Column(name = "email", unique = false, nullable = false, insertable = true, updatable = true)
     private String  email ;
+    @Column(name = "civilState", unique = false, nullable = false, insertable = true, updatable = true)
+    private CivilState civilState ;
+    @Column(name = "sexe", unique = false, nullable = false, insertable = true, updatable = true)
+    private Sexe sexe ;
     @OneToMany
     List<Appoitement> appoitementList ;
     @OneToMany
     List<Complaint>  complaintList;
+    @OneToMany
+    List<Compte>  compteList;
     @ManyToOne
     Agency agency ;
 
@@ -64,11 +74,11 @@ public class Client {
 
 
 
-    public String getCivilState() {
+    public CivilState getCivilState() {
         return civilState;
     }
 
-    public void setCivilState(String civilState) {
+    public void setCivilState(CivilState civilState) {
         this.civilState = civilState;
     }
 
@@ -79,8 +89,6 @@ public class Client {
     public void setNumTel(String numTel) {
         this.numTel = numTel;
     }
-
-    private String civilState ;
 
     private String numTel ;
 
@@ -133,7 +141,22 @@ public class Client {
         this.address = address;
     }
 
+    public Sexe getSexe() {
+		return sexe;
+	}
 
-    public Client() {
+	public void setSexe(Sexe sexe) {
+		this.sexe = sexe;
+	}
+
+	public List<Compte> getCompteList() {
+		return compteList;
+	}
+
+	public void setCompteList(List<Compte> compteList) {
+		this.compteList = compteList;
+	}
+
+	public Client() {
     }
 }

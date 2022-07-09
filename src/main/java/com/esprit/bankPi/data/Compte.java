@@ -27,7 +27,7 @@ public class Compte {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@javax.persistence.Column(name = "numeroCompte_", unique = true, nullable = false, insertable = true, updatable = false)
+	@javax.persistence.Column(name = "numeroCompte", unique = true, nullable = false, insertable = true, updatable = false)
 	public Long getNumeroCompte() {
 		return numeroCompte;
 	}
@@ -36,7 +36,7 @@ public class Compte {
 		this.numeroCompte = numeroCompte;
 	}
 	
-	@javax.persistence.Column(name = "solde_", unique = false, nullable = false, insertable = true, updatable = true)
+	@javax.persistence.Column(name = "solde", unique = false, nullable = false, insertable = true, updatable = true)
 	public Float getSolde() {
 		return solde;
 	}
@@ -44,7 +44,7 @@ public class Compte {
 		this.solde = solde;
 	}
 	
-	@javax.persistence.Column(name = "currency_", unique = false, nullable = false, insertable = true, updatable = true)
+	@javax.persistence.Column(name = "currency", unique = false, nullable = false, insertable = true, updatable = true)
 	public Currency getCurrency() {
 		return currency;
 	}
@@ -53,7 +53,7 @@ public class Compte {
 		this.currency = currency;
 	}
 	
-	@javax.persistence.Column(name = "type_", unique = false, nullable = false, insertable = true, updatable = false)
+	@javax.persistence.Column(name = "type", unique = false, nullable = false, insertable = true, updatable = false)
 	public CompteType getType() {
 		return type;
 	}
@@ -62,8 +62,8 @@ public class Compte {
 		this.type = type;
 	}
 	
-	@OneToOne(fetch = FetchType.LAZY, optional = true, mappedBy = "compteId")
-	@javax.persistence.Column(name = "checkBook_", unique = false, nullable = true, insertable = true, updatable = true)
+	@OneToOne(fetch = FetchType.LAZY, optional = true)
+	@javax.persistence.JoinColumn(name = "checkBook", unique = false, nullable = true, insertable = true, updatable = true)
 	public CheckBook getCheckBook() {
 		return checkBook;
 	}
@@ -73,7 +73,7 @@ public class Compte {
 	}
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "compteId")
-	@javax.persistence.Column(name = "bankCartes_", unique = false, nullable = true, insertable = true, updatable = true)
+	@javax.persistence.Column(name = "bankCartes", unique = false, nullable = true, insertable = true, updatable = true)
 	public List<BankCarte> getBankCarte() {
 		return bankCartes;
 	}
