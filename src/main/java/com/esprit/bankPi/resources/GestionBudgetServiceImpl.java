@@ -20,13 +20,13 @@ public class GestionBudgetServiceImpl {
 	@Autowired
 	GestionBudgetController gestionBudget;
 
-	@GetMapping(path="/WhenReachTarget", produces = "application/json")
+	@GetMapping(path="/whenReachTarget", produces = "application/json")
 	public YearMonth getWhenReachTarget(@QueryParam("idUser") Long idUser, @QueryParam("target") Float target,
 			@QueryParam("numeroCompte") Long numeroCompte) throws Exception {
 		return gestionBudget.getWhenReachTarget(idUser, target, numeroCompte);
 	}
 
-	@GetMapping(path="/HowReachTarget", produces = "application/json")
+	@GetMapping(path="/howReachTarget", produces = "application/json")
 	public Map<YearMonth, Float> getHowReachTarget(@QueryParam("idUser") Long idUser,
 			@QueryParam("targetMoney") Float targetMoney, @QueryParam("targetDate") YearMonth targetDate,
 			@QueryParam("numeroCompte") Long numeroCompte) {

@@ -1,59 +1,52 @@
 package com.esprit.bankPi.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.esprit.bankPi.data.Compte;
 import com.esprit.bankPi.repository.CompteRepository;
 
-@Path("/compte")
-@Produces({MediaType.APPLICATION_JSON})
-@Consumes({ MediaType.APPLICATION_JSON})
+@RestController
+@RequestMapping("/compte")
 public class CompteServiceImpl implements ICompteService{
 
 	@Autowired
 	private CompteRepository compteRepository;
 	
-	@POST
-	@Path("/save")
+	@PostMapping(path="/save", produces = "application/json")
 	public Compte save(Compte compte) throws Exception {
 		return compteRepository.save(compte);			}
 	
-	@PUT
+	@PutMapping(path="/update", produces = "application/json")
 	public Compte update(Compte compte) throws Exception {
 		return compteRepository.save(compte);
 	}
 	
-	@DELETE
-	@Path("/{id}")
+	@DeleteMapping(path="/{id}", produces = "application/json")
 	public void deleteOne( @PathParam("id") Long id) throws Exception {
 		compteRepository.deleteById(id);
 	}
 
-	@GET
+	@GetMapping(path="/{id}", produces = "application/json")
 	public Compte findByid(@QueryParam("id") Long id) throws Exception {
 		return compteRepository.findById(id).orElse(null);
 	}
 
-	@GET
-	@Path("/search/all")
+	@GetMapping(path="/search/all", produces = "application/json")
 	public Iterable<Compte> findAll() throws ServiceException {
 		return compteRepository.findAll();
 	}
 	
-	@GET
-	@Path("/count")
+	@GetMapping(path="/count", produces = "application/json")
 	public Long count() throws Exception {
 		return compteRepository.count();
 	}
