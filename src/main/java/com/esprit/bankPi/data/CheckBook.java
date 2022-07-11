@@ -21,7 +21,7 @@ public class CheckBook {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@javax.persistence.Column(name = "checkBookNumber_", unique = true, nullable = false, insertable = true, updatable = false)
+	@javax.persistence.Column(name = "checkBookNumber", unique = true, nullable = false, insertable = true, updatable = false)
 	public Long getCheckBookNumber() {
 		return checkBookNumber;
 	}
@@ -30,7 +30,7 @@ public class CheckBook {
 	}
 	
 	@OneToOne(fetch = FetchType.LAZY, optional = true, mappedBy = "checkBook")
-	@javax.persistence.Column(name = "compteId_", unique = false, nullable = true, insertable = true, updatable = false)
+	@javax.persistence.JoinColumn(name = "compteId", unique = false, nullable = true, insertable = true, updatable = false)
 	public Compte getCompteId() {
 		return compteId;
 	}
@@ -39,7 +39,7 @@ public class CheckBook {
 	}
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "checkBookId")
-	@javax.persistence.Column(name = "checks_", unique = false, nullable = true, insertable = true, updatable = false)
+	@javax.persistence.Column(name = "checks", unique = false, nullable = true, insertable = true, updatable = false)
 	public List<Check> getChecks() {
 		return checks;
 	}

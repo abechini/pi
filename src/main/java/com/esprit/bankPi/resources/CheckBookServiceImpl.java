@@ -1,59 +1,54 @@
 package com.esprit.bankPi.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.esprit.bankPi.data.CheckBook;
 import com.esprit.bankPi.repository.CheckBookRepository;
 
-@Path("/checkbook")
-@Produces({MediaType.APPLICATION_JSON})
-@Consumes({ MediaType.APPLICATION_JSON})
+@RestController
+@RequestMapping("/checkbook")
 public class CheckBookServiceImpl implements ICheckBookService{
 
 	@Autowired
 	private CheckBookRepository checkbookRepository;
 	
-	@POST
-	@Path("/save")
+
+	@PostMapping(path="/save", produces = "application/json")
 	public CheckBook save(CheckBook checkBook) throws Exception {
 		return checkbookRepository.save(checkBook);			}
 	
-	@PUT
+	@PutMapping(path="/update", produces = "application/json")
 	public CheckBook update(CheckBook checkBook) throws Exception {
 		return checkbookRepository.save(checkBook);
 	}
 	
-	@DELETE
-	@Path("/{id}")
+
+	@DeleteMapping(path="/{id}", produces = "application/json")
 	public void deleteOne( @PathParam("id") Long id) throws Exception {
 		checkbookRepository.deleteById(id);
 	}
 
-	@GET
+	@GetMapping(path="/{id}", produces = "application/json")
 	public CheckBook findByid(@QueryParam("id") Long id) throws Exception {
 		return checkbookRepository.findById(id).orElse(null);
 	}
 
-	@GET
-	@Path("/search/all")
+	@GetMapping(path="/search/all", produces = "application/json")
 	public Iterable<CheckBook> findAll() throws ServiceException {
 		return checkbookRepository.findAll();
 	}
 	
-	@GET
-	@Path("/count")
+	@GetMapping(path="/count", produces = "application/json")
 	public Long count() throws Exception {
 		return checkbookRepository.count();
 	}

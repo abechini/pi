@@ -23,7 +23,7 @@ public class BankCarte {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@javax.persistence.Column(name = "numeroCarte_", unique = true, nullable = false, insertable = true, updatable = false)
+	@javax.persistence.Column(name = "numeroCarte", unique = true, nullable = false, insertable = true, updatable = false)
 	public Long getCarteNumber() {
 		return carteNumber;
 	}
@@ -32,7 +32,7 @@ public class BankCarte {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "numeroCompte_")
+    @JoinColumn(name = "numeroCompte")
 	public Compte getCompteId() {
 		return compteId;
 	}
@@ -41,7 +41,7 @@ public class BankCarte {
 	}
 	
 	@Temporal(value = TemporalType.TIMESTAMP)
-	@javax.persistence.Column(name = "expirationDate_", unique = false, nullable = false, insertable = true, updatable = true)
+	@javax.persistence.Column(name = "expirationDate", unique = false, nullable = false, insertable = true, updatable = true)
 	public Date getExpiration() {
 		return expiration;
 	}

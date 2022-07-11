@@ -18,7 +18,7 @@ public class Check {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@javax.persistence.Column(name = "checkId_", unique = true, nullable = false, insertable = true, updatable = false)
+	@javax.persistence.Column(name = "checkId", unique = true, nullable = false, insertable = true, updatable = false)
 	public Long getCheckId() {
 		return checkId;
 	}
@@ -27,7 +27,7 @@ public class Check {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "checkBookNumber_")
+    @JoinColumn(name = "checkBookNumber")
 	public CheckBook getCheckBookId() {
 		return checkBookId;
 	}
