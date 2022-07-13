@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import com.esprit.bankPi.enums.CompteType;
 import com.esprit.bankPi.enums.Currency;
+import com.esprit.bankPi.model.credit.Credit;
 
 //JPA Annotations
 @Table(name = "data_Compte")
@@ -24,6 +25,7 @@ public class Compte {
 	private CompteType type;
 	private CheckBook checkBook;
 	private List<BankCarte> bankCartes;
+	private String name;
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -77,11 +79,19 @@ public class Compte {
 	public List<BankCarte> getBankCarte() {
 		return bankCartes;
 	}
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
+    List<Credit>  creditList;
 
 	public void setBankCarte(List<BankCarte> bankCartes) {
 		this.bankCartes = bankCartes;
 	}
 
+	public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 	
 }
