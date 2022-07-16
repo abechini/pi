@@ -34,12 +34,12 @@ public class PiBankApplication {
 	            /*
 	                initialize the DB when app starts to run.
 	            */
-	            ChatBotSearchUtil.MySQLInitTable("Small");
-	            ChatBotSearchUtil.MySQLInitTable("Medium");
-	            ChatBotSearchUtil.MySQLInitTable("Large");
-	            ChatBotSearchUtil.MySQLParseXML("Small");
-	            ChatBotSearchUtil.MySQLParseXML("Medium");
-	           ChatBotSearchUtil.MySQLParseXML("Large");
+//	            ChatBotSearchUtil.MySQLInitTable("Small");
+//	            ChatBotSearchUtil.MySQLInitTable("Medium");
+//	            ChatBotSearchUtil.MySQLInitTable("Large");
+//	            ChatBotSearchUtil.MySQLParseXML("Small");
+//	            ChatBotSearchUtil.MySQLParseXML("Medium");
+//	           ChatBotSearchUtil.MySQLParseXML("Large");
 
 	        } catch (Exception e) {
 	            e.printStackTrace();

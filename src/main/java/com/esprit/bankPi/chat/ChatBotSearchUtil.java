@@ -4,6 +4,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.esprit.bankPi.model.Reclamation;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,7 +26,7 @@ public class ChatBotSearchUtil {
 
 	    protected final static int MAX_HIT = 100000;
 
-	    public static HashMap<String, String> fileNameMap, tableNameMap, historyResultMap, BruteForceQA, LuceneQA;
+	    public static HashMap<String, String> fileNameMap, tableNameMap, historyResultMap;
 
 	    public static HashMap<String, Double>  MySQLQA;
 
@@ -33,7 +35,7 @@ public class ChatBotSearchUtil {
 
 	    public static Set<Map.Entry<String, String>> entrySet;
 
-//	    public static String cacheHistResult;
+	    public static String cacheHistResult;
 
 	    public static double startTime = 0;
 
@@ -52,9 +54,9 @@ public class ChatBotSearchUtil {
 	         */
 	  
 	        tableNameMap = new HashMap<>();
-	        tableNameMap.put("Small", "Article1");
-	        tableNameMap.put("Medium", "Article2");
-	        tableNameMap.put("Large", "Article3");
+	        tableNameMap.put("Small", "reclamation");
+	        tableNameMap.put("Medium", "reclamation");
+	        tableNameMap.put("Large", "reclamation");
 
 	        MySQLQA = new HashMap<>();
 	        MySQLCount = new HashMap<>();
@@ -115,27 +117,22 @@ public class ChatBotSearchUtil {
 	     * @param fileType
 	     * @throws SQLException
 	     */
-	    public static void MySQLInitTable(String fileType) throws SQLException {
-	        String tableName = tableNameMap.get(fileType);
-	        connection.createStatement().execute("CREATE TABLE " + tableName + "(\n"
-	                + "  id integer primary key auto_increment,\n"
-	                + "  Title varchar(1000) not null,\n"
-	                + "  solution varchar(10000) not null,\n"
-	                + "  Date varchar(25) not null\n"
-	                + ")");
-	    }
+//	    public static void MySQLInitTable(String fileType) throws SQLException {
+//	        String tableName = tableNameMap.get(fileType);
+//	        connection.createStatement().execute("CREATE TABLE " + tableName + "(\n"
+//	                + "  id integer primary key auto_increment,\n"
+//	                + "  Name varchar(1000) not null,\n"
+//	                + "  solution varchar(10000) not null,\n"
+//	                + "  Date varchar(25) not null\n"
+//	                + ")");
+//	    }
 
-	    /**
-	     * Parse XML and insert ArticleTitle and PubDate into MySQL
-	     *
-	     * @param fileType
-	     * @throws SQLException
-	     */
+	    
 	    public static void MySQLParseXML(String fileType) throws SQLException {
 	        String tableName = tableNameMap.get(fileType);
 	        String fileName = fileNameMap.get(fileType);
 	        String curFilePath = "src/main/resources/data-xml/" + fileName;
-	        PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + "(" + "  Title, solution, date)" + "VALUES(?, ?, ?)");
+	        PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + "(" + "  Name, solution, date)" + "VALUES(?, ?, ?)");
 	        try {
 	            // xml parse
 	            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -187,7 +184,7 @@ public class ChatBotSearchUtil {
 	        String searchYear = "";
 	        String startYear = "";
 	        String endYear = "";
-	        String solution ="test solution";
+	        String solution = "";
 	        String sqlTableName = ChatBotSearchUtil.tableNameMap.get(fileType);
 	        String query = "";
 	        String query1 = "";
@@ -198,19 +195,23 @@ public class ChatBotSearchUtil {
 	            // query by year
 	            setStartTime();
 	            searchYear = words.get(words.indexOf("in") + 1);
-//	            cacheHistResult = searchCacheHist(searchWord, searchYear);
-//	            if (!cacheHistResult.isEmpty())
-//	                return cacheHistResult;
+	            cacheHistResult = searchCacheHist(searchWord, searchYear);
+	            if (!cacheHistResult.isEmpty())
+	                return cacheHistResult;
 	            if (isValidYear(searchYear)) {
-	                query = "SELECT COUNT(*) FROM " + sqlTableName + " WHERE Title like '%" + searchWord +
+	                query = "SELECT COUNT(*) FROM " + sqlTableName + " WHERE Name like '%" + searchWord +
 	                        "%' AND Date like '" + searchYear + "%'";
-	                ResultSet resultSet = statement.executeQuery(query);
-	                query1 = "SELECT SOLUTION FROM " + sqlTableName;
-//	                ResultSet resultSet1 = statement.executeQuery(query1);
-	//
-//	                while (resultSet1.next())
-//	                    solution = resultSet1.getString(1);
-//	            
+//	                query1 ="SELECT * FROM"+ sqlTableName + " WHERE Name like '%" + searchWord +
+//	                        "%' AND Date like '" + searchYear + "%'";
+	               // query1="SELECT solution FROM reclamation where Name like Name and date like 2018;";
+	             //   ResultSet result= statement.executeQuery(query1);
+	               
+	             
+	                
+	                  
+	                
+	                
+	                ResultSet resultSet = statement.executeQuery(query);          
 	                String count = "";
 	                while (resultSet.next())
 	                    count = resultSet.getString(1);
@@ -218,7 +219,7 @@ public class ChatBotSearchUtil {
 	                double runTime = getRunningTime();
 	            
 	                res = "The total counts in year " + searchYear + " with word: " 
-	                + searchWord + " is " + count  + "  " + "the solution is:  "+solution;
+	                + searchWord + " is " + count  + "  " + "the solution is:  "+ solution;
 	                MySQLQA.put(fileType, runTime);
 	                MySQLCount.put(fileType, Integer.parseInt(count));
 	                historyResultMap.put(searchContent + " (by MySQL)", res);
@@ -230,19 +231,19 @@ public class ChatBotSearchUtil {
 	            startYear = words.get(words.indexOf("from") + 1);
 	            endYear = words.get(words.indexOf("to") + 1);
 	            setStartTime();
-//	            cacheHistResult = searchCacheHist(searchWord, startYear, endYear);
-//	            if (!cacheHistResult.isEmpty())
-//	                return cacheHistResult;
+	            cacheHistResult = searchCacheHist(searchWord, startYear, endYear);
+	            if (!cacheHistResult.isEmpty())
+	                return cacheHistResult;
 	            if (isValidYear(startYear) && isValidYear(endYear)) {
 	                query = "SELECT COUNT(*) FROM " + sqlTableName +
-	                        " where REGEXP_LIKE(Title, \'" + searchWord + "\') and convert(substring(Date, 1, 4), SIGNED) between " + Integer.parseInt(startYear) + " and " + Integer.parseInt(endYear) + ";";
+	                        " where REGEXP_LIKE(Name, \'" + searchWord + "\') and convert(substring(Date, 1, 4), SIGNED) between " + Integer.parseInt(startYear) + " and " + Integer.parseInt(endYear) + ";";
 	                System.out.println(query);
 	                ResultSet resultSet = statement.executeQuery(query);
 	                String count = "";
 	                while (resultSet.next())
 	                    count = resultSet.getString(1);
 	                double runTime = getRunningTime();
-	                res = "Articles count from year " + startYear + " to year " + endYear + " with word: " + searchWord + " is " + count + ". (response time:" + runTime + " ms)"  + "  "+ "the solution is: "+solution;
+	                res = "Articles count from year " + startYear + " to year " + endYear + " with word: " + searchWord + " is " + count + ". (response time:" + runTime + " ms)"  + "  "+ "the solution is: ";
 	                MySQLQA.put(fileType, runTime);
 	                MySQLCount.put(fileType, Integer.parseInt(count));
 	                historyResultMap.put(searchContent+ " (by MySQL)", res);
