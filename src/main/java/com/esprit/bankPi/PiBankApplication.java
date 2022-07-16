@@ -12,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import com.esprit.bankPi.chat.ChatBotSearchUtil;
 import com.esprit.bankPi.chat.ChatBotSearchUtil;
+
 import com.esprit.bankPi.controller.GestionBudgetController;
 import com.esprit.bankPi.data.Agency;
 import com.esprit.bankPi.data.Client;
@@ -45,7 +46,6 @@ public class PiBankApplication {
 	            e.printStackTrace();
 	        }
 	    }
-	
 	public static ClientRepository clientRepository ;
 	public static AgencyRepository agencyRepository;
 	public static CompteRepository compteRepository;
@@ -61,7 +61,6 @@ public class PiBankApplication {
     public void setCompteRepo(CompteRepository repo){
         this.compteRepository= repo;
     }
-	
 	public static void main(String[] args) {
 		
 		SpringApplication.run(PiBankApplication.class, args);

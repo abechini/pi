@@ -52,5 +52,4 @@ public class SMSSender {
     }
     conn.disconnect();
   }
-
 }
