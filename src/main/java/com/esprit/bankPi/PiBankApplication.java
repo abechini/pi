@@ -1,5 +1,6 @@
 package com.esprit.bankPi;
 
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -17,13 +18,16 @@ import com.esprit.bankPi.controller.GestionBudgetController;
 import com.esprit.bankPi.data.Agency;
 import com.esprit.bankPi.data.Client;
 import com.esprit.bankPi.data.Compte;
+import com.esprit.bankPi.data.Income;
 import com.esprit.bankPi.enums.CivilState;
 import com.esprit.bankPi.enums.CompteType;
 import com.esprit.bankPi.enums.Currency;
+import com.esprit.bankPi.enums.IncomeType;
 import com.esprit.bankPi.enums.Sexe;
 import com.esprit.bankPi.repository.AgencyRepository;
 import com.esprit.bankPi.repository.ClientRepository;
 import com.esprit.bankPi.repository.CompteRepository;
+import com.esprit.bankPi.repository.IncomeRepository;
 import com.esprit.bankPi.resources.GestionBudgetServiceImpl;
 
 @SpringBootApplication
@@ -49,6 +53,8 @@ public class PiBankApplication {
 	public static ClientRepository clientRepository ;
 	public static AgencyRepository agencyRepository;
 	public static CompteRepository compteRepository;
+	public static IncomeRepository incomeRepository;
+
 	@Autowired
     public void setClientRepository(ClientRepository repo){
         this.clientRepository= repo;
@@ -61,16 +67,27 @@ public class PiBankApplication {
     public void setCompteRepo(CompteRepository repo){
         this.compteRepository= repo;
     }
+	@Autowired
+    public void setIncomeRepository(IncomeRepository repo){
+        this.incomeRepository= repo;
+    }
 	public static void main(String[] args) {
 		
 		SpringApplication.run(PiBankApplication.class, args);
 		
-		for(int i=0;i<10 ; i++) {
+		for(int i=0;i<200 ; i++) {
 			Client client = new Client();
 			Agency agency = new Agency();
 			Compte compte = new Compte();
+			Income income = new Income();
+			List<Income> listIncome = new ArrayList<Income>();
+			income.setIncomeType(IncomeType.SALARY);
+			income.setIncomeEndDate(YearMonth.of(2050, 12));
+			income.setIncomeAmount(Math.random()*100);
 			List<Compte> list = new ArrayList<Compte>();
 			compte.setCurrency(Currency.TND);
+			listIncome.add(income);
+			compte.setIncomes(listIncome);
 			agency.setName("amen");
 			client.setAddress("tunis");
 			client.setSexe(Sexe.Male);
@@ -86,6 +103,7 @@ public class PiBankApplication {
 			compte.setSolde((float) Math.random()*100);
 			compte.setType(CompteType.SAVING);
 			client.setCin(Math.random()+"");
+			incomeRepository.save(income);
 			compteRepository.save(compte);
 			clientRepository.save(client);
 			
