@@ -104,7 +104,7 @@ public class PiBankApplication {
 			compte.setSolde((float) Math.random()*100);
 			compte.setType(CompteType.SAVING);
 			client.setCin(Math.random()+"");
-			incomeRepository.save(income);
+			//incomeRepository.save(income);
 			clientRepository.save(client);
 			//compteRepository.save(compte);
 

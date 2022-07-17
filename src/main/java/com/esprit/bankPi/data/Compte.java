@@ -67,7 +67,7 @@ public class Compte {
 		this.type = type;
 	}
 	
-	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true)
 	@javax.persistence.JoinColumn(name = "checkBook", unique = false, nullable = true, insertable = true, updatable = true)
 	public CheckBook getCheckBook() {
 		return checkBook;
@@ -77,7 +77,7 @@ public class Compte {
 		this.checkBook = checkBook;
 	}
 	
-	@OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	//(fetch = FetchType.LAZY)
 	//@JoinColumn(name = "bankCartes")
 	//@javax.persistence.Column(name = "bankCartes", unique = false, nullable = true, insertable = true, updatable = true)
@@ -89,7 +89,7 @@ public class Compte {
 		this.bankCartes = bankCartes;
 	}
 	
-	@OneToMany(cascade = CascadeType.REMOVE , orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL , orphanRemoval = true)
 	//(fetch = FetchType.LAZY, mappedBy = "compteId")
 	//@javax.persistence.Column(name = "incomes", unique = false, nullable = true, insertable = true, updatable = true)
 	public List<Income> getIncomes() {
