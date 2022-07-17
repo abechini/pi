@@ -11,11 +11,12 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
+
 
 public class MailUtility {
 	private static Properties gMailConfig = new Properties();
-	static Logger logger = Logger.getLogger(MailUtility.class);
+	//static Logger logger = Logger.getLogger(MailUtility.class);
 
 	static {
 		loadMailParam();
@@ -46,7 +47,7 @@ public class MailUtility {
 			
 			
 		} catch (Exception e) {
-			logger.error(e);
+		//	logger.error(e);
 		} 		
 		 
 		
@@ -59,14 +60,14 @@ public class MailUtility {
 			gMailConfig.load( input );
 		}
 		catch ( IOException ex ){
-			logger.error("Cannot open or load application.properties file." ,ex);
+		//	logger.error("Cannot open or load application.properties file." ,ex);
 		}
 		finally {
 			try {
 				if ( input != null ) input.close();
 			}
 			catch ( IOException ex ){
-				logger.error("Cannot close application.properties file." ,ex);
+			//	logger.error("Cannot close application.properties file." ,ex);
 			}
 		}
 	}

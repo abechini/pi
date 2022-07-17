@@ -10,6 +10,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
+import com.esprit.bankPi.chat.ChatBotSearchUtil;
+import com.esprit.bankPi.chat.ChatBotSearchUtil;
+
 import com.esprit.bankPi.controller.GestionBudgetController;
 import com.esprit.bankPi.data.Agency;
 import com.esprit.bankPi.data.Client;
@@ -25,7 +28,24 @@ import com.esprit.bankPi.resources.GestionBudgetServiceImpl;
 
 @SpringBootApplication
 public class PiBankApplication {
-	
+	 public PiBankApplication() throws Exception {
+	        // initialize various settings when start running the springbootapplication
+	        super();
+	        try {
+	            /*
+	                initialize the DB when app starts to run.
+	            */
+//	            ChatBotSearchUtil.MySQLInitTable("Small");
+//	            ChatBotSearchUtil.MySQLInitTable("Medium");
+//	            ChatBotSearchUtil.MySQLInitTable("Large");
+//	            ChatBotSearchUtil.MySQLParseXML("Small");
+//	            ChatBotSearchUtil.MySQLParseXML("Medium");
+//	           ChatBotSearchUtil.MySQLParseXML("Large");
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
 	public static ClientRepository clientRepository ;
 	public static AgencyRepository agencyRepository;
 	public static CompteRepository compteRepository;
