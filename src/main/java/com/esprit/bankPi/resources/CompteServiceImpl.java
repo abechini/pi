@@ -1,6 +1,6 @@
 package com.esprit.bankPi.resources;
 
-import java.util.*;
+import java.util.Optional;
 
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -56,7 +56,14 @@ public class CompteServiceImpl implements ICompteService{
 		return compteRepository.count();
 	}
 	
-	
+	public Compte getAccountById(Long id) {
+		Optional<Compte> act = compteRepository.findById(id);
+		if (act.isPresent()) {
+			return act.get();
+		} else {
+			return null;
+		}
+	}
 	
  public Compte getAccountById(Long id) {
         Optional<Compte> act = compteRepository.findById(id);

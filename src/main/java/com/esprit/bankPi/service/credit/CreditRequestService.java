@@ -1,27 +1,24 @@
 package com.esprit.bankPi.service.credit;
 
-import com.esprit.bankPi.model.credit.Credit;
-import com.esprit.bankPi.model.credit.CreditRequest;
-import com.esprit.bankPi.model.credit.Insurance;
-import com.esprit.bankPi.data.Compte;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.esprit.bankPi.enums.CreditRequestStatus;
 import com.esprit.bankPi.enums.CreditStatus;
 import com.esprit.bankPi.enums.CreditType;
-import com.esprit.bankPi.exception.InvalidArguementException;
+import com.esprit.bankPi.model.credit.Credit;
+import com.esprit.bankPi.model.credit.CreditRequest;
+import com.esprit.bankPi.model.credit.Insurance;
 import com.esprit.bankPi.repository.credit.CreditRepository;
 import com.esprit.bankPi.repository.credit.CreditRequestRepository;
 import com.esprit.bankPi.repository.credit.InsuranceRepository;
 import com.esprit.bankPi.resources.CompteServiceImpl;
 import com.esprit.bankPi.util.Constants;
 import com.esprit.bankPi.util.SystemMessages;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.NoSuchElementException;
-import java.util.Set;
 @Service
 public class CreditRequestService {
 	
