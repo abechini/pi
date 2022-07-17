@@ -6,6 +6,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -24,7 +26,8 @@ public class Compte {
 	private CompteType type;
 	private CheckBook checkBook;
 	private List<BankCarte> bankCartes;
-	private String name;
+	private List<Income> incomes;
+	private Client client;
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -73,23 +76,38 @@ public class Compte {
 		this.checkBook = checkBook;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "compteId")
-	@javax.persistence.Column(name = "bankCartes", unique = false, nullable = true, insertable = true, updatable = true)
-	public List<BankCarte> getBankCarte() {
+	@OneToMany
+	//(fetch = FetchType.LAZY)
+	//@JoinColumn(name = "bankCartes")
+	//@javax.persistence.Column(name = "bankCartes", unique = false, nullable = true, insertable = true, updatable = true)
+	public List<BankCarte> getBankCartes() {
 		return bankCartes;
 	}
 
-	public void setBankCarte(List<BankCarte> bankCartes) {
+	public void setBankCartes(List<BankCarte> bankCartes) {
 		this.bankCartes = bankCartes;
 	}
 	
-	public String getName() {
-        return name;
-    }
+	@OneToMany
+	//(fetch = FetchType.LAZY, mappedBy = "compteId")
+	//@javax.persistence.Column(name = "incomes", unique = false, nullable = true, insertable = true, updatable = true)
+	public List<Income> getIncomes() {
+		return incomes;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setIncomes(List<Income> incomes) {
+		this.incomes = incomes;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "client")
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
 
 
 	

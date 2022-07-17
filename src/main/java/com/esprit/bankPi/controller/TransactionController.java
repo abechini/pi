@@ -19,8 +19,8 @@ public class TransactionController {
 public static Map<YearMonth,Double> getSavings(Client client) {
 	Map<YearMonth,Double> savings = new HashMap<YearMonth, Double>();
 	YearMonth yearMonth = YearMonth.now();
-	for(int i = 0; i<3; i++) {
-		savings.put(yearMonth.minusMonths(i), Math.random()*10);
+	for(int i = 0; i<12; i++) {
+		savings.put(yearMonth.minusMonths(i), Math.random()*100);
 	}
 	return savings;
 	

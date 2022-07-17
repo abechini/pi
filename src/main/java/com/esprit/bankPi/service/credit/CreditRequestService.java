@@ -44,7 +44,7 @@ public class CreditRequestService {
 	    public CreditRequest addCreditRequest(CreditRequest creditRequest, Integer id) throws Exception {
 	        creditRequest.setCreationDate(new Date());
 	        creditRequest.setCreditRequestStatus(CreditRequestStatus.CREATED);
-	        creditRequest.setAccount(compteServiceImpl.getAccountById(id.longValue()));
+	        creditRequest.setAccount(compteServiceImpl.findByid(id.longValue()));
 	        //add insurance
 	       insuranceRepository.save(creditRequest.getInsurance());
             
@@ -193,7 +193,7 @@ public Credit createCreditFromCreditRequest(Integer id) throws Exception {
 	            insurance.setType(creditRequest.getType());
 	            insurance.setCreationDate(new Date());
 	            insurance.setAmount(creditRequest.getCreditAmount() * Constants.INSURANCE_PERCENTAGE);
-	            insurance.setBeneficiary(creditRequest.getAccount().getName());
+	            insurance.setBeneficiary(creditRequest.getAccount().getClient().getName());
 	            insuranceRepository.save(insurance);
 	            creditRequest.setInsurance(insurance);
 	        }
