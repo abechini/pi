@@ -1,11 +1,10 @@
 package com.esprit.bankPi.repository.credit;
 
 
-import com.esprit.bankPi.model.credit.Credit;
 import com.esprit.bankPi.model.credit.CreditRequest;
-import com.esprit.bankPi.model.credit.Payment;
+
 import com.esprit.bankPi.enums.CreditRequestStatus;
-import com.esprit.bankPi.enums.CreditStatus;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

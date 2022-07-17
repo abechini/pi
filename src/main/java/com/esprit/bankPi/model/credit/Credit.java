@@ -36,15 +36,17 @@ public class Credit {
 	    private Double payedAmount;
 	    private Double remainingAmount;
 	    
-	    @OneToMany(mappedBy="credit")
+	    /*@OneToMany(mappedBy="credit")
 	    @OrderBy("paymentDueDate ASC ")
 	    private Set<Payment> payments;
+	    */
+	    
+	    
 	    @OneToOne(fetch = FetchType.EAGER)
 	    @JoinColumn(name = "creditrequest_id")
 	    private CreditRequest creditRequest;
 	    
-	/*  @OneToOne(fetch = FetchType.EAGER)
-	    @JoinColumn(name = "acount_id")*/
+	
 	    
 	    @ManyToOne(fetch = FetchType.LAZY)
 	    @JoinColumn(name = "numeroCompte")
@@ -63,13 +65,13 @@ public class Credit {
 	        this.account = account;
 	    }
 
-	    public Set<Payment> getPayments() {
+	  /*  public Set<Payment> getPayments() {
 	        return payments;
 	    }
 
 	    public void setPayments(Set<Payment> payments) {
 	        this.payments = payments;
-	    }
+	    }*/
 
 	    public CreditRequest getCreditRequest() {
 	        return creditRequest;

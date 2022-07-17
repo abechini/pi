@@ -9,7 +9,7 @@ import com.esprit.bankPi.simulator.LoanSimulatorService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//@ResponseStatus(HttpStatus.OK)
+@ResponseStatus(HttpStatus.OK)
 
 
 public class InvalidArguementException extends RuntimeException{
@@ -25,9 +25,9 @@ public class InvalidArguementException extends RuntimeException{
 	
 	    public InvalidArguementException(String message) {
 	    	
-	    /*	super(message);
+	  	super(message);
 	    	LOG.error(message);  
-	  */  }
+	    }
 	
 	
 	

@@ -10,5 +10,10 @@ public enum CreditType {
 	    CreditType(final String typeName) {
 	        this.typeName = typeName;
 	    }
+	    
+	    @Override
+	    public String toString() {
+	        return typeName;
+	    }
 
 }

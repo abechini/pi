@@ -2,12 +2,12 @@ package com.esprit.bankPi.service.credit;
 
 import com.esprit.bankPi.model.credit.Credit;
 import com.esprit.bankPi.model.credit.CreditRequest;
-import com.esprit.bankPi.model.credit.Payment;
+
 import com.esprit.bankPi.enums.CreditRequestStatus;
 import com.esprit.bankPi.enums.CreditStatus;
 import com.esprit.bankPi.repository.credit.CreditRepository;
 import com.esprit.bankPi.repository.credit.CreditRequestRepository;
-import com.esprit.bankPi.repository.credit.PaymentRepository;
+
 import com.esprit.bankPi.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,42 +22,6 @@ public class CreditService {
 	
 	 @Autowired
 	    private CreditRepository creditRepository;
-
-	    @Autowired
-	    private PaymentRepository paymentRepository;
-
-
-	    public Credit addCredit(Credit credit) throws Exception {
-
-	                 if (credit.getCreditRequest().getCreditRequestStatus().toString().equals(CreditRequestStatus.CONFIRMED.toString())) {
-	                     Set<Payment> payments = new HashSet<>();
-	                     Double totalCreditAmount = credit.getCreditAmount() + (credit.getCreditAmount() * Constants.CREDIT_INTEREST) + Constants.CREDIT_FEES + credit.getCreditRequest().getInsurance().getAmount();
-	                             Payment payment = null;
-	                     LocalDate date = LocalDate.now();
-	                     LocalDate firstDayOfMonth = LocalDate.of(date.getYear(),date.getMonth(),1);
-	                     for(int i = 0; i< credit.getCreditTerm(); i++){
-	                         firstDayOfMonth = firstDayOfMonth.plusMonths(1);
-	                         payment = new Payment();
-	                         payment.setCreationDate(date);
-	                         payment.setPaymentStatus(CreditStatus.CREATED);
-	                         payment.setPaymentAmount(totalCreditAmount / credit.getCreditTerm());
-	                         payment.setPaymentInterest(credit.getCreditInterest());
-	                         payment.setPaymentDueDate(firstDayOfMonth);
-	                         payment.setPaymentInterest(Constants.CREDIT_INTEREST);
-	                         payments.add(payment);
-	                     }
-	                     credit.setPayments(payments);
-	                     credit.setPayedAmount(0d);
-	                     credit.setRemainingAmount(totalCreditAmount);
-	                     creditRepository.save(credit);
-	                     for (Payment payment1 : payments){
-	                         payment1.setCredit(credit);
-	                     }
-	                     paymentRepository.saveAll(payments);
-	                     return creditRepository.findById(credit.getId()).get();
-	                 }
-	                 return null;
-	    }
 
 	    public String deleteCredit(Integer id) throws Exception {
 	        if (creditRepository.findById(id.longValue()).isPresent()) {

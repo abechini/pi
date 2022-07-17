@@ -47,20 +47,15 @@ public class CreditRequestController {
 	        return new ResponseEntity<>(creditRequestService.getCreditRequest(id), HttpStatus.OK);
 	         
 	    }
-	    /*
-	  //get all CreditRequest
-	    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-	    @ResponseStatus(HttpStatus.CREATED)
-	    public ResponseEntity<CreditRequest> getAllCreditRequest() throws Exception {
-	        return new ResponseEntity<>(creditRequestService.getAllCreditRequest(), HttpStatus.OK);
-	         
-	    }*/
+	
 //createCreditFromCreditRequest
 	    @PostMapping(value = "/{id}/create-credit", produces = MediaType.APPLICATION_JSON_VALUE)
 	    @ResponseStatus(HttpStatus.CREATED)
 	    public ResponseEntity<Credit> acceptCreditRequest(@PathVariable(value = "id") Integer id) throws Exception {
 	        return new ResponseEntity<>(creditRequestService.createCreditFromCreditRequest(id), HttpStatus.OK);
 	    }
+	    
+	 
 //rejectCreditRequest
 	    @PutMapping(value = "/{id}/reject", produces = MediaType.APPLICATION_JSON_VALUE)
 	    @ResponseStatus(HttpStatus.OK)
@@ -69,7 +64,7 @@ public class CreditRequestController {
 	    }
 //acceptCreditRequestChanges
 	    @PutMapping(value = "/{id}/client-accept", produces = MediaType.APPLICATION_JSON_VALUE)
-	    @ResponseStatus(HttpStatus.OK)
+	  //  @ResponseStatus(HttpStatus.OK)
 	    public ResponseEntity<CreditRequest> acceptCreditRequestChanges(@PathVariable(value = "id") Integer id) throws Exception {
 	        return new ResponseEntity<>(creditRequestService.acceptCreditRequestChanges(id), HttpStatus.OK);
 	    }
@@ -79,11 +74,20 @@ public class CreditRequestController {
 	    public ResponseEntity<CreditRequest> treatCreditRequest(@PathVariable(value = "id") Integer id) throws Exception {
 	        return new ResponseEntity<>(creditRequestService.treatCreditRequest(id), HttpStatus.OK);
 	    }
+	    
+	    
 //getAllCreditRequestAcceptedFromClients()
 	    @GetMapping(value = "/client-accepted", produces = MediaType.APPLICATION_JSON_VALUE)
 	    @ResponseStatus(HttpStatus.CREATED)
 	    public ResponseEntity<Set<CreditRequest>> getAllCreditRequestAcceptedFromClients() throws Exception {
 	        return new ResponseEntity<>(creditRequestService.getAllCreditRequestAcceptedFromClients(), HttpStatus.OK);
 	    }
-
+	    
+	  //getAllCreditRequestAcceptedFromClients()
+	    @GetMapping(value = "/client-rejected", produces = MediaType.APPLICATION_JSON_VALUE)
+	    @ResponseStatus(HttpStatus.CREATED)
+	    public ResponseEntity<Set<CreditRequest>> getAllCreditRequestRejecteFromClients() throws Exception {
+	        return new ResponseEntity<>(creditRequestService.getAllCreditRequestRejecredFromClients(), HttpStatus.OK);
+	    }
+	  
 }

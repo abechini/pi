@@ -4,34 +4,34 @@ package com.esprit.bankPi.simulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.esprit.bankPi.exception.InvalidArguementException;
-import com.esprit.bankPi.simulator.LoanSimulatorRepository;
+
 import com.esprit.bankPi.util.SystemMessages;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
+
+
 @Service
 
 public class LoanSimulatorService {
     private static final Logger LOG = LoggerFactory.getLogger(LoanSimulatorService.class);
-    @Autowired
-    private LoanSimulatorRepository loanSimulatorRepository;
+  
 
     public String calculateCreditMentuality(double loanAmount, double intrestRate, double months) {
         double t = intrestRate / 100;
+        //Mensualité = [capital × (taux/12)]/[1 – (1 + (taux/12) – (12 × nombre d’années de remboursement))] 
         double t1 = loanAmount * t / 12;
-        double t2 = 1 - Math.pow(1 + t / 12, -months);
-        return "  Credit  Monthly payment="+(t1 / t2)+"  DT";
+   //   double t2 = (1 - (1 + (t /12) - months));
+      double t2 = 1 - Math.pow(1 + t / 12, -months);
+     
+        return "  Monthly loan payment ="+(t1 / t2)+" DT" + "    ===>   The amount of interest added per month ="+(t1/ (1 - (1 + (t /12) - months))) +" DT"  ;
     }
 
     public String calculateCarCreditMentuality(double loanAmount, double months) {
         double intrestRate = 0;
         if (months < 36) {
             LOG.error("Car loan should be on 3 years or more");
-       // throw new InvalidArguementException(SystemMessages.CAR_LOAN_MIN_YEARS);
+       
          String message = SystemMessages.CAR_LOAN_MIN_YEARS;
         
         return message;
@@ -46,7 +46,7 @@ public class LoanSimulatorService {
             intrestRate = 4.45;
         } else if (months > 72) {
             LOG.error("Car loan couldn't be on more than 6 years ");
-      //  throw new InvalidArguementException(SystemMessages.CAR_LOAN_MAX_YEARS);
+     
         String message = SystemMessages.CAR_LOAN_MAX_YEARS;
         
         return message;
@@ -66,10 +66,10 @@ public class LoanSimulatorService {
             String message = SystemMessages.HOME_LOAN_MIN_YEARS;
             
             return message;
-           // throw new InvalidArguementException(SystemMessages.HOME_LOAN_MIN_YEARS);
+          
         } else if ((months / 12) == 15) {
             intrestRate = 2.5;
-        } else if ((months / 12) <= 30 && (months / 12) >= 16) {
+        } else if ((months / 12) <= 30 && (months / 12) > 15) {
             intrestRate = 3.2;
            
         } else if ((months / 12) > 30) {
@@ -78,10 +78,6 @@ public class LoanSimulatorService {
         	String message = SystemMessages.HOME_LOAN_MAX_YEARS;
    
     return message;
-    	 
-    	       
-				
-    	    
 
         }
     	
