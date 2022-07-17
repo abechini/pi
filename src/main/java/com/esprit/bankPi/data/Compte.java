@@ -15,6 +15,7 @@ import javax.persistence.Table;
 
 import com.esprit.bankPi.enums.CompteType;
 import com.esprit.bankPi.enums.Currency;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //JPA Annotations
 @Table(name = "data_Compte")
@@ -22,12 +23,16 @@ import com.esprit.bankPi.enums.Currency;
 public class Compte {
 
 	private Long numeroCompte;
-	private Float solde;
+	private Double solde;
 	private Currency currency;
 	private CompteType type;
+	@JsonIgnoreProperties("compteId")
 	private CheckBook checkBook;
+	@JsonIgnoreProperties("compteId")
 	private List<BankCarte> bankCartes;
+	@JsonIgnoreProperties("compteId")
 	private List<Income> incomes;
+	@JsonIgnoreProperties("compteList")
 	private Client client;
 	
 	@Id
@@ -42,10 +47,10 @@ public class Compte {
 	}
 	
 	@javax.persistence.Column(name = "solde", unique = false, nullable = false, insertable = true, updatable = true)
-	public Float getSolde() {
+	public Double getSolde() {
 		return solde;
 	}
-	public void setSolde(Float solde) {
+	public void setSolde(Double solde) {
 		this.solde = solde;
 	}
 	

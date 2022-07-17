@@ -13,12 +13,15 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 //JPA Annotations
 @Table(name = "data_BankCarte")
 @javax.persistence.Entity(name = "data_BankCarte")
 public class BankCarte {
 	
 	private Long carteNumber;
+	@JsonIgnoreProperties("bankCartes")
 	private Compte compteId;
 	private Date expiration;
 	

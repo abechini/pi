@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import com.esprit.bankPi.enums.CivilState;
 import com.esprit.bankPi.enums.Sexe;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +36,7 @@ public class Client {
     List<Appoitement> appoitementList ;
     @OneToMany
     List<Complaint>  complaintList;
+    @JsonIgnoreProperties("client")
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "client")
     List<Compte>  compteList= new ArrayList<Compte>();
     @ManyToOne

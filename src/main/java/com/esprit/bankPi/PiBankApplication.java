@@ -101,7 +101,7 @@ public class PiBankApplication {
 			agencyRepository.save(agency);
 			client.setFirstName("aziz"+Math.random()*100);
 			client.setName("bechini");
-			compte.setSolde((float) Math.random()*100);
+			compte.setSolde((Double) Math.random()*100);
 			compte.setType(CompteType.SAVING);
 			client.setCin(Math.random()+"");
 			//incomeRepository.save(income);
