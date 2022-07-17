@@ -108,7 +108,4 @@ public class Compte {
 	public void setClient(Client client) {
 		this.client = client;
 	}
-
-
-	
 }
