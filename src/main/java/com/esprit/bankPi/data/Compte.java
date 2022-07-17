@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -24,6 +25,8 @@ public class Compte {
 	private CompteType type;
 	private CheckBook checkBook;
 	private List<BankCarte> bankCartes;
+	private String name;
+	private Compte compte;
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -82,6 +85,22 @@ public class Compte {
 		this.bankCartes = bankCartes;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	public Compte getCompte() {
+		return compte;
+	}
 
+	public void setCompte(Compte compte) {
+		this.compte = compte;
+	}
+	
+
+	public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 	
 }
