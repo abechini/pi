@@ -11,7 +11,7 @@ import com.esprit.bankPi.exception.InvalidArguementException;
 import com.esprit.bankPi.repository.credit.CreditRepository;
 import com.esprit.bankPi.repository.credit.CreditRequestRepository;
 import com.esprit.bankPi.repository.credit.InsuranceRepository;
-import com.esprit.bankPi.service.account.AccountService;
+import com.esprit.bankPi.resources.CompteServiceImpl;
 import com.esprit.bankPi.util.Constants;
 import com.esprit.bankPi.util.SystemMessages;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +38,13 @@ public class CreditRequestService {
 	    private CreditService creditService;
 
 	    @Autowired
-	    private AccountService accountService;
+	    private CompteServiceImpl compteServiceImpl;
 //add
 
 	    public CreditRequest addCreditRequest(CreditRequest creditRequest, Integer id) throws Exception {
 	        creditRequest.setCreationDate(new Date());
 	        creditRequest.setCreditRequestStatus(CreditRequestStatus.CREATED);
-	        creditRequest.setAccount(accountService.getAccountById(id.longValue()));
+	        creditRequest.setAccount(compteServiceImpl.getAccountById(id.longValue()));
 	        //add insurance
 	       insuranceRepository.save(creditRequest.getInsurance());
             
