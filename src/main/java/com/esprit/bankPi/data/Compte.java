@@ -27,6 +27,7 @@ public class Compte {
 	private List<BankCarte> bankCartes;
 	private String name;
 	private Compte compte;
+
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -84,6 +85,14 @@ public class Compte {
 	public void setBankCarte(List<BankCarte> bankCartes) {
 		this.bankCartes = bankCartes;
 	}
+	
+	public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	public Compte getCompte() {

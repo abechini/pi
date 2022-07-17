@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+
+
 import com.esprit.bankPi.data.Compte;
 import com.esprit.bankPi.repository.CompteRepository;
 
@@ -62,4 +65,12 @@ public class CompteServiceImpl implements ICompteService{
 		}
 	}
 	
+ public Compte getAccountById(Long id) {
+        Optional<Compte> act = compteRepository.findById(id);
+        if (act.isPresent()) {
+            return act.get();
+        } else {
+            return null;
+        }
+    }
 }
