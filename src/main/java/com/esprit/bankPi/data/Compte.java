@@ -2,6 +2,7 @@ package com.esprit.bankPi.data;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -66,7 +67,7 @@ public class Compte {
 		this.type = type;
 	}
 	
-	@OneToOne(fetch = FetchType.LAZY, optional = true)
+	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@javax.persistence.JoinColumn(name = "checkBook", unique = false, nullable = true, insertable = true, updatable = true)
 	public CheckBook getCheckBook() {
 		return checkBook;
@@ -76,7 +77,7 @@ public class Compte {
 		this.checkBook = checkBook;
 	}
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
 	//(fetch = FetchType.LAZY)
 	//@JoinColumn(name = "bankCartes")
 	//@javax.persistence.Column(name = "bankCartes", unique = false, nullable = true, insertable = true, updatable = true)
@@ -88,7 +89,7 @@ public class Compte {
 		this.bankCartes = bankCartes;
 	}
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.REMOVE , orphanRemoval = true)
 	//(fetch = FetchType.LAZY, mappedBy = "compteId")
 	//@javax.persistence.Column(name = "incomes", unique = false, nullable = true, insertable = true, updatable = true)
 	public List<Income> getIncomes() {

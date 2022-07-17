@@ -88,6 +88,7 @@ public class PiBankApplication {
 			compte.setCurrency(Currency.TND);
 			listIncome.add(income);
 			compte.setIncomes(listIncome);
+			//compte.setClient(client);
 			agency.setName("amen");
 			client.setAddress("tunis");
 			client.setSexe(Sexe.Male);
@@ -104,8 +105,9 @@ public class PiBankApplication {
 			compte.setType(CompteType.SAVING);
 			client.setCin(Math.random()+"");
 			incomeRepository.save(income);
-			compteRepository.save(compte);
 			clientRepository.save(client);
+			//compteRepository.save(compte);
+
 			
 		}
 	}

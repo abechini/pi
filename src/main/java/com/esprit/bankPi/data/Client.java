@@ -5,6 +5,7 @@ import javax.persistence.*;
 import com.esprit.bankPi.enums.CivilState;
 import com.esprit.bankPi.enums.Sexe;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,8 +35,8 @@ public class Client {
     List<Appoitement> appoitementList ;
     @OneToMany
     List<Complaint>  complaintList;
-    @OneToMany
-    List<Compte>  compteList;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "client")
+    List<Compte>  compteList= new ArrayList<Compte>();
     @ManyToOne
     Agency agency ;
 
