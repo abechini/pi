@@ -11,7 +11,7 @@ import com.esprit.bankPi.data.Income;
 @Controller(value = "incomeController")
 public class IncomeController {
 	
-public static double getTotalIncome(Compte compte, YearMonth toDate) {
+public static Double getTotalIncome(Compte compte, YearMonth toDate) {
 	Double total = 0d;
 	List<Income> incomes = compte.getIncomes();
 	for(Income in : incomes) {

@@ -42,8 +42,8 @@ public class GestionBudgetController {
 		// get rest money to reach
 		Client client = clientRepository.getById(idUser);
 		Compte compte = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte())).findFirst().get();
-		Float cureentSolde = compte.getSolde();
-		Float toReachGap = target - cureentSolde;
+		Double cureentSolde = compte.getSolde();
+		Double toReachGap = target - cureentSolde;
 		if (toReachGap > 0) {
 			Instance instance = null;
 			InputStream is = null;
@@ -66,7 +66,7 @@ public class GestionBudgetController {
 			// get predicted value
 			double savingprediction = linear.classifyInstance(instance);
 			// test if we have the target amount of money
-			cureentSolde = (float) (cureentSolde + getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
+			cureentSolde = (Double) (cureentSolde + getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
 			targetDate.add(Calendar.MONTH, 1);
 			while (cureentSolde < target) {
 				// change the old depense with the predicted value
@@ -88,7 +88,7 @@ public class GestionBudgetController {
 				savingprediction = linear.classifyInstance(instance);
 				
 				System.out.println("Date to predicate : "+YearMonth.from(convertToLocalDateViaInstant(targetDate.getTime()))+ " current balance : "+cureentSolde+" saving prediction : "+getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
-				cureentSolde = (float) (cureentSolde + getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
+				cureentSolde = (Double) (cureentSolde + getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
 				targetDate.add(Calendar.MONTH, 1);
 				if (targetDate.getTime().getYear()>(Calendar.getInstance().getTime().getYear()+50)) {
 					System.out.println("limit reached");
@@ -104,21 +104,21 @@ public class GestionBudgetController {
 	}
 
 	// table for each month how much he needs to save
-	public Map<YearMonth, Float> getHowReachTarget(Long idUser, Float targetMoney, YearMonth targetDate,
+	public Map<YearMonth, Double> getHowReachTarget(Long idUser, Float targetMoney, YearMonth targetDate,
 			Long numeroCompte) {
-		Map<YearMonth, Float> savingsSched = new HashMap<YearMonth, Float>();
+		Map<YearMonth, Double> savingsSched = new HashMap<YearMonth, Double>();
 		YearMonth currentDate = YearMonth.now();
 		// simple service
 		if (currentDate.isBefore(targetDate)) {
 			Client client = clientRepository.getById(idUser);
-			Float cureentSolde = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte()))
+			Double cureentSolde = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte()))
 					.findFirst().get().getSolde();
-			Float toReachGap = targetMoney - cureentSolde;
+			Double toReachGap = targetMoney - cureentSolde;
 			if (toReachGap > 0) {
 				Period period = Period
 						.between(convertToLocalDateViaInstant(new Date()), targetDate.atDay(targetDate.lengthOfMonth()));
 				int nbrOfMonths = period.getMonths()+(period.getYears()*12)+(period.getDays()>0?1:0);
-				float avg = toReachGap / nbrOfMonths;
+				Double avg = toReachGap / nbrOfMonths;
 				for (int i = 0; i < nbrOfMonths; i++) {
 					savingsSched.put(currentDate.plusMonths(i), avg);
 				}
