@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,8 @@ public class DepositServiceImpl implements IDepositService {
 	@Autowired
 	CompteRepository compteRepository;
 
-	public void deposit(double amount, CurrencyEnum currency, long idCompte) throws TransactionException {
+	@Transactional
+	public synchronized DepositPojo deposit(double amount, CurrencyEnum currency, long idCompte) throws TransactionException {
 
 		Compte compte = compteRepository.findById(idCompte)
 				.orElseThrow(() -> new TransactionException("Compte not found"));
@@ -35,16 +38,17 @@ public class DepositServiceImpl implements IDepositService {
 		deposit.setCurrency(currency);
 		deposit.setTransaction_date(new Date());
 		deposit.setId(new Random().nextInt());
+		
+		compte.setSolde(compte.getSolde() + amount);
+		compteRepository.save(compte);
 
-		depositRepository.save(deposit);
+		return depositRepository.save(deposit);
 
 	}
 
 	@Override
 	public List<DepositPojo> getAllDeposit(long idCompte) throws TransactionException {
-		return null;
-//		return depositRepository.findByCompte(idCompte);
-		
+		return depositRepository.findByCompte(idCompte);
 	}
 
 }

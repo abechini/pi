@@ -13,7 +13,7 @@ import com.esprit.bankPi.model.Transfert;
 @Repository
 public interface TransfertRepository extends CrudRepository<TransfertPojo, Integer>{
 
-//	@Query("SELECT t FROM transfert_pojo WHERE data_compte.compte.id=:idCompte")
-//	List<TransfertPojo> findByCompte(@Param("idCompte") Long idCompte);
+	@Query(value = "SELECT * FROM trasfert_pojo t WHERE t.compte_numero_compte=:idCompte", nativeQuery = true)
+	List<TransfertPojo> findByCompte(@Param("idCompte") Long idCompte);
 	
 }

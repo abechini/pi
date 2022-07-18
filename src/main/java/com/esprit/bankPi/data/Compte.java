@@ -5,8 +5,6 @@ import java.util.Random;
 
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,7 +25,7 @@ public class Compte {
 	private Long numeroCompte;
 	private String rib;
 	private Double solde;
-	private Currency currency;
+	private CurrencyEnum currency;
 	private CompteType type;
 	@JsonIgnoreProperties("compteId")
 	private CheckBook checkBook;
@@ -39,7 +37,7 @@ public class Compte {
 	private Client client;
 	
 	@Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE)
+//@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@javax.persistence.Column(name = "numeroCompte", unique = true, nullable = false, insertable = true, updatable = false)
 	public Long getNumeroCompte() {
 		if(numeroCompte!=null && numeroCompte!=0) {
@@ -80,11 +78,11 @@ public class Compte {
 	}
 	
 	@javax.persistence.Column(name = "currency", unique = false, nullable = false, insertable = true, updatable = true)
-	public Currency getCurrency() {
+	public CurrencyEnum getCurrency() {
 		return currency;
 	}
 
-	public void setCurrency(Currency currency) {
+	public void setCurrency(CurrencyEnum currency) {
 		this.currency = currency;
 	}
 	
@@ -115,7 +113,7 @@ public class Compte {
 	public void setBankCartes(List<BankCarte> bankCartes) {
 		this.bankCartes = bankCartes;
 	}
-	
+
 	@OneToMany(cascade = CascadeType.ALL , orphanRemoval = true)
 	public List<Income> getIncomes() {
 		return incomes;

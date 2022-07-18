@@ -13,7 +13,7 @@ import com.esprit.bankPi.model.Withdraw;
 @Repository
 public interface WithdrowRepository extends CrudRepository<WithdrowPojo, Integer>{
 	
-//	@Query("SELECT w FROM withdrow WHERE compte.id = :idCompte")
-//	List<WithdrowPojo> findByCompte(@Param("idCompte") Long idCompte);
+	@Query(value = "SELECT * FROM withdraw w WHERE w.compte_numero_compte=:idCompte", nativeQuery = true)
+	List<WithdrowPojo> findByCompte(@Param("idCompte") Long idCompte);
 
 }

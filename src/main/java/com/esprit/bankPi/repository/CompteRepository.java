@@ -13,7 +13,8 @@ import com.esprit.bankPi.data.Compte;
 @Repository
 public interface CompteRepository extends CrudRepository<Compte, Long>{
 
-//	@Query("SELECT c FROM data_Compte WHERE data_Compte.name:=clientName")
-//	Optional<Compte> findByClientName(@Param("clientName") String clientName);
+
+	@Query(value =  "SELECT * FROM data_Compte c WHERE c.name:=clientName", nativeQuery = true)
+	Optional<Compte> findByClientName(@Param("clientName") String clientName);
 	
 }
