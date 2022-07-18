@@ -41,6 +41,65 @@
 <!-- 			<groupId>org.springframework.boot</groupId> -->
 <!-- 			<artifactId>spring-boot-starter-security</artifactId> -->
 <!-- 		</dependency> -->
+
+ <dependency>
+	<groupId>org.apache.camel.springboot</groupId>
+	<artifactId>camel-spring-boot</artifactId>
+	<version>3.15.0</version>
+   </dependency>
+	<dependency>
+		<groupId>org.apache.camel.springboot</groupId>
+		<artifactId>camel-spring-boot-bom</artifactId>
+		<version>3.15.0</version>
+		<type>pom</type>
+		<scope>import</scope>
+	</dependency>
+	 <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-spring-boot-starter</artifactId>
+            <version>3.15.0</version>
+      </dependency>
+      <dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-core</artifactId>
+			<version>3.15.0</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-mail</artifactId>
+			<version>3.15.0</version>
+		</dependency>
+	   <dependency>
+		<groupId>org.apache.camel.springboot</groupId>
+		<artifactId>camel-rest-starter</artifactId>
+		<version>3.15.0</version>
+       </dependency>
+       <dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-netty-http</artifactId>
+			<version>3.15.0</version>
+		</dependency>
+		 <dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jetty</artifactId>
+			<version>3.15.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-servlet</artifactId>
+			<version>3.15.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-http</artifactId>
+			<version>3.15.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-undertow</artifactId>
+			<version>3.15.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
