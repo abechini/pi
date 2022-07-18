@@ -9,7 +9,7 @@ import com.esprit.bankPi.model.Deposit;
 
 public interface IDepositService {
 
-	void deposit(double amount, CurrencyEnum currency, long idCompte) throws TransactionException;
+	DepositPojo deposit(double amount, CurrencyEnum currency, long idCompte) throws TransactionException;
 
 	List<DepositPojo> getAllDeposit(long idCompte) throws TransactionException;
 

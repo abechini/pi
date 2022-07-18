@@ -27,7 +27,7 @@ public class GestionBudgetServiceImpl {
 	}
 
 	@GetMapping(path="/howReachTarget", produces = "application/json")
-	public Map<YearMonth, Float> getHowReachTarget(@QueryParam("idUser") Long idUser,
+	public Map<YearMonth, Double> getHowReachTarget(@QueryParam("idUser") Long idUser,
 			@QueryParam("targetMoney") Float targetMoney, @QueryParam("targetDate") YearMonth targetDate,
 			@QueryParam("numeroCompte") Long numeroCompte) {
 		return gestionBudget.getHowReachTarget(idUser, targetMoney, targetDate, numeroCompte);

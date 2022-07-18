@@ -3,8 +3,6 @@ package com.esprit.bankPi.data;
 import java.util.List;
 
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -12,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.esprit.bankPi.enums.CompteType;
-import com.esprit.bankPi.enums.Currency;
+import com.esprit.bankPi.enums.CurrencyEnum;
 
 //JPA Annotations
 @Table(name = "data_Compte")
@@ -20,8 +18,8 @@ import com.esprit.bankPi.enums.Currency;
 public class Compte {
 
 	private Long numeroCompte;
-	private Float solde;
-	private Currency currency;
+	private Double solde;
+	private CurrencyEnum currency;
 	private CompteType type;
 	private CheckBook checkBook;
 	private List<BankCarte> bankCartes;
@@ -30,7 +28,6 @@ public class Compte {
 
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@javax.persistence.Column(name = "numeroCompte", unique = true, nullable = false, insertable = true, updatable = false)
 	public Long getNumeroCompte() {
 		return numeroCompte;
@@ -41,19 +38,19 @@ public class Compte {
 	}
 	
 	@javax.persistence.Column(name = "solde", unique = false, nullable = false, insertable = true, updatable = true)
-	public Float getSolde() {
+	public Double getSolde() {
 		return solde;
 	}
-	public void setSolde(Float solde) {
+	public void setSolde(Double solde) {
 		this.solde = solde;
 	}
 	
 	@javax.persistence.Column(name = "currency", unique = false, nullable = false, insertable = true, updatable = true)
-	public Currency getCurrency() {
+	public CurrencyEnum getCurrency() {
 		return currency;
 	}
 
-	public void setCurrency(Currency currency) {
+	public void setCurrency(CurrencyEnum currency) {
 		this.currency = currency;
 	}
 	
@@ -86,6 +83,7 @@ public class Compte {
 		this.bankCartes = bankCartes;
 	}
 	
+	@javax.persistence.Column(name = "name", unique = false, nullable = true, insertable = true, updatable = true)
 	public String getName() {
         return name;
     }
@@ -103,13 +101,5 @@ public class Compte {
 		this.compte = compte;
 	}
 	
-
-	public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 	
 }

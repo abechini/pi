@@ -64,13 +64,4 @@ public class CompteServiceImpl implements ICompteService{
 			return null;
 		}
 	}
-	
- public Compte getAccountById(Long id) {
-        Optional<Compte> act = compteRepository.findById(id);
-        if (act.isPresent()) {
-            return act.get();
-        } else {
-            return null;
-        }
-    }
 }

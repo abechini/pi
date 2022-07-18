@@ -1,5 +1,7 @@
 package com.esprit.bankPi.data;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -31,13 +33,17 @@ public class TransactionPojo {
 
 	String amount;
 
-	@Temporal(TemporalType.DATE)
-	Date transaction_date;
+	String transaction_date ;
 
 	@Enumerated(EnumType.STRING)
 	CurrencyEnum currency;
-	
+
 	@ManyToOne
 	Compte compte;
+	
+	public void setTransaction_date(Date date) {
+		SimpleDateFormat DateFor = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SS");
+		this.transaction_date = DateFor.format(date);
+	}
 
 }
