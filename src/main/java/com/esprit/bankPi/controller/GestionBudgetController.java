@@ -41,10 +41,9 @@ public class GestionBudgetController {
 	public YearMonth getWhenReachTarget(Long idUser, Float target, Long numeroCompte) throws Exception {
 		// get rest money to reach
 		Client client = clientRepository.getById(idUser);
-		Compte compte = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte()))
-				.findFirst().get();
-		double cureentSolde = compte.getSolde();
-		double toReachGap = target - cureentSolde;
+		Compte compte = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte())).findFirst().get();
+		Double cureentSolde = compte.getSolde();
+		Double toReachGap = target - cureentSolde;
 
 		if (toReachGap > 0) {
 			Instance instance = null;
@@ -68,8 +67,7 @@ public class GestionBudgetController {
 			// get predicted value
 			double savingprediction = linear.classifyInstance(instance);
 			// test if we have the target amount of money
-			cureentSolde = (Double) (cureentSolde + getReelSavingMoney(cureentSolde, savingprediction));
-
+			cureentSolde = (Double) (cureentSolde + getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
 			targetDate.add(Calendar.MONTH, 1);
 			while (cureentSolde < target) {
 				// change the old depense with the predicted value
@@ -89,15 +87,10 @@ public class GestionBudgetController {
 				linear.buildClassifier(instances);
 				instance = instances.get(instances.numInstances() - 1);
 				savingprediction = linear.classifyInstance(instance);
+				
+				System.out.println("Date to predicate : "+YearMonth.from(convertToLocalDateViaInstant(targetDate.getTime()))+ " current balance : "+cureentSolde+" saving prediction : "+getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
+				cureentSolde = (Double) (cureentSolde + getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
 
-				System.out.println(
-						"Date to predicate : " + YearMonth.from(convertToLocalDateViaInstant(targetDate.getTime()))
-								+ " current balance : " + cureentSolde + " saving prediction : "
-								+ getReelSavingMoney(
-										IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)),
-										savingprediction));
-				cureentSolde = (double) (cureentSolde + getReelSavingMoney(
-						IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
 				targetDate.add(Calendar.MONTH, 1);
 
 				cureentSolde = (Double) (cureentSolde + getReelSavingMoney(cureentSolde, savingprediction));
@@ -125,12 +118,12 @@ public class GestionBudgetController {
 			Client client = clientRepository.getById(idUser);
 			Double cureentSolde = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte()))
 					.findFirst().get().getSolde();
-			double toReachGap = targetMoney - cureentSolde;
+			Double toReachGap = targetMoney - cureentSolde;
 			if (toReachGap > 0) {
-				Period period = Period.between(convertToLocalDateViaInstant(new Date()),
-						targetDate.atDay(targetDate.lengthOfMonth()));
-				int nbrOfMonths = period.getMonths() + (period.getYears() * 12) + (period.getDays() > 0 ? 1 : 0);
-				double avg = toReachGap / nbrOfMonths;
+				Period period = Period
+						.between(convertToLocalDateViaInstant(new Date()), targetDate.atDay(targetDate.lengthOfMonth()));
+				int nbrOfMonths = period.getMonths()+(period.getYears()*12)+(period.getDays()>0?1:0);
+				Double avg = toReachGap / nbrOfMonths;
 				for (int i = 0; i < nbrOfMonths; i++) {
 					savingsSched.put(currentDate.plusMonths(i), avg);
 				}

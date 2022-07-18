@@ -37,8 +37,8 @@ public class Client {
     @OneToMany
     List<Complaint>  complaintList;
     @JsonIgnoreProperties("client")
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "client")
-    List<Compte>  compteList= new ArrayList<Compte>();
+    @OneToMany(cascade = CascadeType.ALL)
+    List<Compte>  compteList = new ArrayList<Compte>();
     @ManyToOne
     Agency agency ;
 
