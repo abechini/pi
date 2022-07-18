@@ -2,8 +2,10 @@ package com.esprit.bankPi.data;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -11,6 +13,7 @@ import javax.persistence.Table;
 
 import com.esprit.bankPi.enums.CompteType;
 import com.esprit.bankPi.enums.CurrencyEnum;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //JPA Annotations
 @Table(name = "data_Compte")
@@ -21,11 +24,14 @@ public class Compte {
 	private Double solde;
 	private CurrencyEnum currency;
 	private CompteType type;
+	@JsonIgnoreProperties("compteId")
 	private CheckBook checkBook;
+	@JsonIgnoreProperties("compteId")
 	private List<BankCarte> bankCartes;
-	private String name;
-	private Compte compte;
-
+	@JsonIgnoreProperties("compteId")
+	private List<Income> incomes;
+	@JsonIgnoreProperties("compteList")
+	private Client client;
 	
 	@Id
 	@javax.persistence.Column(name = "numeroCompte", unique = true, nullable = false, insertable = true, updatable = false)
@@ -63,7 +69,7 @@ public class Compte {
 		this.type = type;
 	}
 	
-	@OneToOne(fetch = FetchType.LAZY, optional = true)
+	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true)
 	@javax.persistence.JoinColumn(name = "checkBook", unique = false, nullable = true, insertable = true, updatable = true)
 	public CheckBook getCheckBook() {
 		return checkBook;
@@ -73,33 +79,36 @@ public class Compte {
 		this.checkBook = checkBook;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "compteId")
-	@javax.persistence.Column(name = "bankCartes", unique = false, nullable = true, insertable = true, updatable = true)
-	public List<BankCarte> getBankCarte() {
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	//(fetch = FetchType.LAZY)
+	//@JoinColumn(name = "bankCartes")
+	//@javax.persistence.Column(name = "bankCartes", unique = false, nullable = true, insertable = true, updatable = true)
+	public List<BankCarte> getBankCartes() {
 		return bankCartes;
 	}
 
-	public void setBankCarte(List<BankCarte> bankCartes) {
+	public void setBankCartes(List<BankCarte> bankCartes) {
 		this.bankCartes = bankCartes;
 	}
+
+	@OneToMany(cascade = CascadeType.ALL , orphanRemoval = true)
+	//(fetch = FetchType.LAZY, mappedBy = "compteId")
+	//@javax.persistence.Column(name = "incomes", unique = false, nullable = true, insertable = true, updatable = true)
+	public List<Income> getIncomes() {
+		return incomes;
+	}
+
+	public void setIncomes(List<Income> incomes) {
+		this.incomes = incomes;
+	}
 	
-	@javax.persistence.Column(name = "name", unique = false, nullable = true, insertable = true, updatable = true)
-	public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
 	@ManyToOne(fetch = FetchType.LAZY)
-	public Compte getCompte() {
-		return compte;
+	@JoinColumn(name = "client")
+	public Client getClient() {
+		return client;
 	}
 
-	public void setCompte(Compte compte) {
-		this.compte = compte;
+	public void setClient(Client client) {
+		this.client = client;
 	}
-	
-	
 }

@@ -7,9 +7,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.YearMonth;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,8 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.esprit.bankPi.data.Client;
-import com.esprit.bankPi.enums.CivilState;
-import com.esprit.bankPi.enums.Sexe;
+import com.esprit.bankPi.data.Compte;
 import com.esprit.bankPi.ml.ClientInstance;
 import com.esprit.bankPi.repository.ClientRepository;
 
@@ -47,19 +44,18 @@ public class GestionBudgetController {
 		Double cureentSolde = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte()))
 				.findFirst().get().getSolde();
 		double toReachGap = target - cureentSolde;
+
 		if (toReachGap > 0) {
 			Instance instance = null;
 			InputStream is = null;
 			JSONLoader loader = new JSONLoader();
 			LinearRegression linear = new LinearRegression();
-			//JSONArray data = prepareData();
 			JSONObject data = prepareData();
 			Calendar targetDate = Calendar.getInstance();
 
 			// set instance to predict
 			ClientInstance clientInstance = prepareClientInstance(client, null, null);
 
-			//data.accumulate("data",clientInstance.toString());
 			data.accumulate("data", clientInstance.toJsonObject());
 			is = new ByteArrayInputStream(data.toString().getBytes());
 			
@@ -67,32 +63,42 @@ public class GestionBudgetController {
 			Instances instances = loader.getDataSet();
 			instances.setClassIndex(instances.numAttributes() - 1);
 			linear.buildClassifier(instances);
-			instance = instances.get(instances.numAttributes() - 1);
+			instance = instances.get(instances.numInstances() - 1);
 			// get predicted value
 			double savingprediction = linear.classifyInstance(instance);
 			// test if we have the target amount of money
 			cureentSolde = (Double) (cureentSolde + getReelSavingMoney(cureentSolde, savingprediction));
+
 			targetDate.add(Calendar.MONTH, 1);
 			while (cureentSolde < target) {
 				// change the old depense with the predicted value
 				clientInstance.setSavings(savingprediction);
-				data.getJSONArray("data").put(data.length() - 1, clientInstance.toJsonObject());
-				//data.put(data.length() - 1, clientInstance.toString());
+				data.getJSONArray("data").put(data.getJSONArray("data").length() - 1, clientInstance.toJsonObject());
 				// predict depense of the next month
 				ClientInstance newInst = clientInstance.clone();
-				newInst.setMonth(newInst.getMonth()+1);
+				newInst.setMonth((newInst.getMonth()==12?1:newInst.getMonth()+1));
 				newInst.setSavings(null);
+				clientInstance = newInst.clone();
 				data.getJSONArray("data").put(newInst.toJsonObject());
 				is = new ByteArrayInputStream(data.toString().getBytes());
+				loader = new JSONLoader();
 				loader.setSource(is);
+				instances = loader.getDataSet();
 				instances.setClassIndex(instances.numAttributes() - 1);
 				linear.buildClassifier(instances);
+				instance = instances.get(instances.numInstances() - 1);
 				savingprediction = linear.classifyInstance(instance);
 				
-				System.out.println("Date to predicate : "+YearMonth.from(convertToLocalDateViaInstant(targetDate.getTime()))+ " current balance : "+cureentSolde+" saving prediction : "+getReelSavingMoney(cureentSolde, savingprediction));
-				
+				System.out.println("Date to predicate : "+YearMonth.from(convertToLocalDateViaInstant(targetDate.getTime()))+ " current balance : "+cureentSolde+" saving prediction : "+getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
+				cureentSolde = (float) (cureentSolde + getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
 				targetDate.add(Calendar.MONTH, 1);
-				cureentSolde = (Double) (cureentSolde + getReelSavingMoney(cureentSolde, savingprediction));
+
+        cureentSolde = (Double) (cureentSolde + getReelSavingMoney(cureentSolde, savingprediction));
+
+				if (targetDate.getTime().getYear()>(Calendar.getInstance().getTime().getYear()+50)) {
+					System.out.println("limit reached");
+					break;
+				}
 			}
 			return YearMonth.from(convertToLocalDateViaInstant(new Date(targetDate.getTime().getTime())));
 		} else {
@@ -142,24 +148,17 @@ public class GestionBudgetController {
 	private JSONObject prepareData() throws Exception{
 		JSONObject json = new JSONObject();
 		JSONArray data = new JSONArray();
-//		JSONObject dataObject = new JSONObject();
 		JSONObject clientsJsonObject = new JSONObject();
 		clientsJsonObject.put("relation", "client");
 		clientsJsonObject.put("attributes", getJsonAtt());
-		//add json header
-		//json.put("clients", getJsonAtt());
-//		Collection<ClientInstance> jsonCollection =new  ArrayList<ClientInstance>();
 		List<Client> clients = clientRepository.findAll();
 		for (Client client : clients) {
-			// get savings since the creation of the a compte
 			Map<YearMonth, Double> savings = TransactionController.getSavings(client);
 			
 			for (YearMonth yearMonth : savings.keySet()) {
 				data.put(prepareClientInstance(client, yearMonth, savings.get(yearMonth)).toJsonObject());
 			}
 		}
-		//clientsJsonObject.put("data", data);
-		//return new JSONArray(jsonCollection);
 		json.put("header", clientsJsonObject);
 		json.put("data", data);
 		return json;
@@ -176,8 +175,14 @@ public class GestionBudgetController {
 		return date.getMonth();
 	}
 
-	private double getReelSavingMoney(Double cureentSolde, Double savings) {
-		return (cureentSolde * savings) / 100;
+
+	@SuppressWarnings("unused")
+	private YearMonth calenderToYearMonth(Calendar cal) {
+		return YearMonth.from(convertToLocalDateViaInstant(new Date(cal.getTime().getTime())));
+	}
+
+	private double getReelSavingMoney(Double currentSolde, Double savings) {
+		return (currentSolde * savings) / 100;
 	}
 
 	private ClientInstance prepareClientInstance(Client client, YearMonth yearMonth, Double savings) {
@@ -230,4 +235,5 @@ public class GestionBudgetController {
 		return attributes;
 
 	}
+	
 }

@@ -49,7 +49,7 @@ public class ClientInstance {
 	public String toString() {
 //		return "{mois:" + month + ", sexe:" + sexe + ", ageRange:" + ageRange + ", civilState:"
 //				+ civilState + ", savings:" + (savings==null?"?":savings )+ "}";
-		return "["+ month + "," + (sexe==Sexe.Male?1:0) + "," + ageRange + ","+ (civilState==CivilState.Married?0:1) + "," + (savings==null?'?':savings )+"]";
+		return "["+ month + "," + (sexe==Sexe.Male?1:0) + "," + ageRange + ","+ (civilState==CivilState.Married?0:1) + "," + (savings==null?"?":savings )+"]";
 	}
 	
 	public Object[] toArray() {

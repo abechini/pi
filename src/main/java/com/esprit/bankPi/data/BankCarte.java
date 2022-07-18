@@ -8,9 +8,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //JPA Annotations
 @Table(name = "data_BankCarte")
@@ -18,6 +21,7 @@ import javax.persistence.TemporalType;
 public class BankCarte {
 	
 	private Long carteNumber;
+	@JsonIgnoreProperties("bankCartes")
 	private Compte compteId;
 	private Date expiration;
 	
@@ -31,8 +35,9 @@ public class BankCarte {
 		this.carteNumber = carteNumber;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "numeroCompte")
+//	@ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "numeroCompte")
+	@ManyToOne
 	public Compte getCompteId() {
 		return compteId;
 	}
