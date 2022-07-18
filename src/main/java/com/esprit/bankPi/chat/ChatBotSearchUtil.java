@@ -1,11 +1,15 @@
 package com.esprit.bankPi.chat;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.esprit.bankPi.data.Complaint;
+import com.esprit.bankPi.resources.ComplaintServiceImpl;
+import com.esprit.bankPi.resources.IComplaintService;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,93 +20,106 @@ import java.sql.*;
 import java.util.*;
 import java.util.Map.Entry;
 public class ChatBotSearchUtil {
-
-    protected final static String INVALID_YEAR_WARNING = "Your input year is invalid!";
-
-    protected final static String INVALID_QUERY_WARNING = "Invalid query format, please check query rules and retry!";
-
-    protected final static int MAX_HIT = 100000;
-
-    public static HashMap<String, String> fileNameMap, tableNameMap, historyResultMap;
-
-    public static HashMap<String, Double>  MySQLQA;
-
-    public static HashMap<String, Integer>  MySQLCount;
+@Autowired
+	ComplaintServiceImpl complaintService;
+	public static ArrayList<String> blockedWords = new ArrayList<>(Arrays.asList("FUCK","MERDE"));
+	public static ArrayList<String> ReclamationblockedWords = new ArrayList<>(Arrays.asList("HELP","ISSUES"));
+	 public enum KEYWORD {
+	        MYSQL
+	    }
 
 
-    public static Set<Map.Entry<String, String>> entrySet;
+	    protected final static String INVALID_YEAR_WARNING = "Your input year is invalid!";
 
-    public static String cacheHistResult;
+	    protected final static String INVALID_QUERY_WARNING = "Invalid query format, please check query rules and retry!";
 
-    public static double startTime = 0;
+	    protected final static int MAX_HIT = 100000;
 
-    public static ArrayList<Integer> xCount;
+	    public static HashMap<String, String> fileNameMap, tableNameMap, historyResultMap, BruteForceQA, LuceneQA;
 
-    public static ArrayList<Double>  yMySQLRunTime;
+	    public static HashMap<String, Double>  MySQLQA;
+
+	    public static HashMap<String, Integer>  MySQLCount;
 
 
-    static Connection connection = null;
+	    public static Set<Map.Entry<String, String>> entrySet;
 
+	    public static String cacheHistResult;
+
+	    public static double startTime = 0;
+
+	    public static ArrayList<Integer> xCount;
+
+	    public static ArrayList<Double>  yMySQLRunTime;
+
+
+	    static Connection connection = null;
+
+int year = Calendar.getInstance().get(Calendar.YEAR);
+ Complaint complaint = new Complaint();
  
+	 
 
-    static {
-        /*
-            Initialize global variables: fileNameMap, sqlTableNameMap
-         */
-  
-        tableNameMap = new HashMap<>();
-        tableNameMap.put("Small", "reclamation");
-        tableNameMap.put("Medium", "reclamation");
-        tableNameMap.put("Large", "reclamation");
-
-        MySQLQA = new HashMap<>();
-        MySQLCount = new HashMap<>();
+	    static {
+	        /*
+	            Initialize global variables: fileNameMap, sqlTableNameMap
+	         */
+	  
+	        tableNameMap = new HashMap<>();
+	        tableNameMap.put("reclamation", "reclamation");
 
 
-        /*
-            in historyResultMap, we need to store <key, value> as <userInput, queryResult>;
-         */
-        historyResultMap = new HashMap<>();
-        entrySet = historyResultMap.entrySet();
-
-        /*
-            Initialize xCount, yTimeSeries for plotting graphs with x-axis and y-axis
-         */
-        xCount = new ArrayList<>();
-        yMySQLRunTime = new ArrayList<>();
-    }
-
-    static {
-        try {
-            connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/bankPi?useTimezone=true&serverTimezone=UTC",
-                    "root",
-                    "root"
-            );
-        } catch (SQLException ex) {
-            System.err.println("Driver not found: " + ex.getMessage());
-        }
-    }
+	        MySQLQA = new HashMap<>();
+	        MySQLCount = new HashMap<>();
 
 
-    /**
-     * @param year
-     * @return if the string is a valid year
-     */
-    public static boolean isValidYear(String year) {
-        if (year.length() == 4)
-            return true;
-        else
-            return false;
-    }
+	        /*
+	            in historyResultMap, we need to store <key, value> as <userInput, queryResult>;
+	         */
+	        historyResultMap = new HashMap<>();
+	        entrySet = historyResultMap.entrySet();
 
-    private static void setStartTime() {
-        startTime = System.currentTimeMillis();
-    }
+	        /*
+	            Initialize xCount, yTimeSeries for plotting graphs with x-axis and y-axis
+	         */
+	        xCount = new ArrayList<>();
+	        yMySQLRunTime = new ArrayList<>();
+	    }
 
-    private static double getRunningTime() {
-        return System.currentTimeMillis() - startTime;
-    }
+	    static {
+	        try {
+	            connection = DriverManager.getConnection(
+	                    "jdbc:mysql://localhost:3306/bankPi?useTimezone=true&serverTimezone=UTC",
+	                    "root",
+	                    "root"
+	            );
+	        } catch (SQLException ex) {
+	            System.err.println("Driver not found: " + ex.getMessage());
+	        }
+	    }
+
+
+	    /**
+	     * @param year
+	     * @return if the string is a valid year
+	     */
+	    public static boolean isValidYear(String year) {
+	        if (year.length() == 4)
+	            return true;
+	        else
+	            return false;
+	    }
+
+	    private static void setStartTime() {
+	        startTime = System.currentTimeMillis();
+	    }
+
+	    private static double getRunningTime() {
+	        return System.currentTimeMillis() - startTime;
+	    }
+
+
+
 
 
 	    /**
@@ -115,18 +132,23 @@ public class ChatBotSearchUtil {
 //	        String tableName = tableNameMap.get(fileType);
 //	        connection.createStatement().execute("CREATE TABLE " + tableName + "(\n"
 //	                + "  id integer primary key auto_increment,\n"
-//	                + "  Name varchar(1000) not null,\n"
+//	                + "  Title varchar(1000) not null,\n"
 //	                + "  solution varchar(10000) not null,\n"
 //	                + "  Date varchar(25) not null\n"
 //	                + ")");
 //	    }
 
-	    
+	    /**
+	     * Parse XML and insert ArticleTitle and PubDate into MySQL
+	     *
+	     * @param fileType
+	     * @throws SQLException
+	     */
 	    public static void MySQLParseXML(String fileType) throws SQLException {
 	        String tableName = tableNameMap.get(fileType);
 	        String fileName = fileNameMap.get(fileType);
 	        String curFilePath = "src/main/resources/data-xml/" + fileName;
-	        PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + "(" + "  Name, solution, date)" + "VALUES(?, ?, ?)");
+	        PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + "(" + "  Title, solution, date)" + "VALUES(?, ?, ?)");
 	        try {
 	            // xml parse
 	            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -172,32 +194,38 @@ public class ChatBotSearchUtil {
 	        String res = "";
 	        System.out.println(fileType);
 	        System.out.println(searchContent);
-	        // Here it needs to deconstruct the searchContent.
+	        // Here it needs to deconstruct the searchContent
 	        List<String> words = Arrays.asList(searchContent.toLowerCase().split("\\s+"));
 	        String searchWord = words.get(words.indexOf("search") + 1);
+	        String searchWordReclamation = words.get(words.indexOf("help") + 1);
 	        String searchYear = "";
 	        String startYear = "";
 	        String endYear = "";
-	       
-	        
 	        String sqlTableName = ChatBotSearchUtil.tableNameMap.get(fileType);
-	        String query ;
-	      String query1 ;
-	      String query2 ;
-
+	        String query2 = "";
+	        String query1 = "";
+	        // reponse automatique pour les blocked woeks 
+	        for(String word:words) {
+	        	if(blockedWords.contains(word.toUpperCase()))
+	        		return "ma9al 7yeek klem zyd fel appliication mta3 wethnni";
+	        	
+	        }
+	     
+	        
+	        
 	        Statement statement = connection.createStatement();
 	        System.out.println(Arrays.asList(words));
 	        if (words.contains("in")) {
-	            // query by year
-	            setStartTime();
+	        	setStartTime();
 	            searchYear = words.get(words.indexOf("in") + 1);
-	            cacheHistResult = searchCacheHist(searchWord, searchYear);
-	            if (!cacheHistResult.isEmpty())
-	                return cacheHistResult;
+//	            cacheHistResult = searchCacheHist(searchWord, searchYear);
+//	            if (!cacheHistResult.isEmpty())
+//	                return cacheHistResult;
 	            if (isValidYear(searchYear)) {
-	                query = "SELECT COUNT(*) FROM " + sqlTableName + " WHERE Name like '%" + searchWord +
-	                        "%' AND Date like '" + searchYear + "%'";
-	          query1 ="SELECT solution FROM " + sqlTableName + " WHERE Name like '%" + searchWord +
+	           
+//	                query = "SELECT COUNT(*) FROM " + sqlTableName + " WHERE Name like '%" + searchWord +
+//	                        "%' AND Date like '" + searchYear + "%'";
+	          query1 ="SELECT solution FROM reclamation WHERE Name like '%" + searchWord +
                       "%' AND Date like '" + searchYear + "%'";
 	               // query1="SELECT solution FROM reclamation where Name like Name and date like 2018;";
 	             //   ResultSet result= statement.executeQuery(query1);
@@ -221,18 +249,26 @@ public class ChatBotSearchUtil {
 	                    count++;
 	                
 	                }
+	                if (count ==0) {
+	                	   // reponse automatique pour les mots de reclamation
+	        	        for(String word:words) {
+	        	        	if(ReclamationblockedWords.contains(word.toUpperCase()))
+	        	        		{
+
+return "hani bech nreclami oss bark";}
+	        	        		
+	        	        	
+	        	        }
+	                	
+	                }
 	                double runTime = getRunningTime();
 	            
 	               
 	                
-	                res ="in "+searchYear + " we found "+ count + " reclamations  that have the same Name as yours : "+searchWord + " here is some solutions that can helps you : " + solutions;
+	                res ="in "+searchYear + " we found "+ count + " reclamations  that have the same Name as yours : ( "+searchWord + " ) here is some solutions that can helps you : " + solutions;
 	                MySQLQA.put(fileType, runTime);
-	                MySQLCount.put(fileType, count);
-	         
-	             
-
-	                
-	                historyResultMap.put(searchContent + " (BY reclamations)", res);
+	                MySQLCount.put(fileType,count);
+	                historyResultMap.put(searchContent + " (by MySQL)", res);
 	                return res;
 	            } else
 	                return INVALID_YEAR_WARNING;
@@ -245,12 +281,11 @@ public class ChatBotSearchUtil {
 	            if (!cacheHistResult.isEmpty())
 	                return cacheHistResult;
 	            if (isValidYear(startYear) && isValidYear(endYear)) {
-	                query = "SELECT COUNT(*) FROM " + sqlTableName +
-	                        " where REGEXP_LIKE(Name, \'" + searchWord + "\') and convert(substring(Date, 1, 4), SIGNED) between " + Integer.parseInt(startYear) + " and " + Integer.parseInt(endYear) + ";";
-	                query2 = "SELECT solution FROM " + sqlTableName +
-	                        " where REGEXP_LIKE(Name, \'" + searchWord + "\') and convert(substring(Date, 1, 4), SIGNED) between " + Integer.parseInt(startYear) + " and " + Integer.parseInt(endYear) + ";";
-	                System.out.println(query);
-	                ResultSet resultSet = statement.executeQuery(query);
+	                //query = "SELECT COUNT(*) FROM " + sqlTableName +
+	                  //      " where REGEXP_LIKE(Name, \'" + searchWord + "\') and convert(substring(Date, 1, 4), SIGNED) between " + Integer.parseInt(startYear) + " and " + Integer.parseInt(endYear) + ";";
+	                query2 = "SELECT solution FROM reclamation where REGEXP_LIKE(Name, \'" + searchWord + "\') and convert(substring(Date, 1, 4), SIGNED) between " + Integer.parseInt(startYear) + " and " + Integer.parseInt(endYear) + ";";
+	               // System.out.println(query);
+	               // ResultSet resultSet = statement.executeQuery(query);
 	                ResultSet resultSet3 = statement.executeQuery(query2);
 	                String solutions = "<br>";
 	                int count =0;
@@ -262,8 +297,9 @@ public class ChatBotSearchUtil {
 	                double runTime = getRunningTime();
 	                
 	                res = "from "+startYear+ " to "+endYear+" we found "+count +" reclamations tha have the same name of your problem :"+searchWord + " here is some solutions that can helps you :"+solutions +"<br>"+". (response time:" + runTime + " ms)";
+	                MySQLQA.put(fileType, runTime);
 	                MySQLCount.put(fileType, count);
-	                historyResultMap.put(searchContent+ " (View Solutions)", res);
+	                historyResultMap.put(searchContent+ " (by MySQL)", res);
 	                return res;
 	            } else {
 	                return INVALID_YEAR_WARNING;

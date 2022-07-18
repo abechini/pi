@@ -10,12 +10,12 @@
         // Initial message
         botui.message.bot({
             size: 100,
-            content: 'Welcome! This is my final project chatbot...'
+            content: 'Welcome!'
         }).then(init);
 
         function init() {
             botui.message.bot({
-                content: 'Hi! Please select one of the Pubmed file below:'
+                content: 'Hi! Please select the Reclamation below:'
             }).then(fileSelectFunc).then(function(res) {
                 fileName = res.value
                 fileType = res.text
@@ -24,7 +24,7 @@
                 })
             }).then(function(res) {
                 return botui.message.bot({
-                    content: "Please select your searching approach:"
+                    content: "Please select serach solutions :"
                 })
             }).then(methodSelectFunc).then(function(res) {
                 methodName = res.value
@@ -35,15 +35,15 @@
                 return botui.message.bot({
                     content: 'What do you want to search? (Begin with \'search\')' + '<br /><br />' +
                         'Please follow the searching rules below:<br />' +
-                        '- Query by particular year:<br /> Ex. search cancer in 2020<br />' +
-                        '- Query by year range:<br /> Ex. search cancer from 2018 to 2020<br />'
+                        '- Query by particular year:<br /> Ex. search login error in 2020<br />' +
+                        '- Query by year range:<br /> Ex. search login error  from 2018 to 2020<br />'
                 })
             })
                 .then(function(res) {
                 return botui.action.text({
                     action: {
                         size: 50,
-                        placeholder: 'Ex. search cancer in 2019'
+                        placeholder: 'Ex. search login error in 2019'
                     }
                 });
             })
@@ -78,11 +78,6 @@
                                 icon: "check",
                                 text: "View search history",
                                 value: "view"
-                            },
-                                {
-                                icon: 'close',
-                                text: 'No, show me plots',
-                                value: "no"
                             }]
                         });
                     }).then(function (res) {
@@ -139,14 +134,8 @@
             return botui.action.button({
                 addMessage: true,
                 action: [{
-                    text: 'Small',
-                    value: 'pubmed20n1333'
-                }, {
-                    text: 'Medium',
-                    value: 'pubmed20n1016'
-                }, {
-                    text: 'Large',
-                    value: 'pubmed20n1410'
+                    text: 'Reclamations',
+                    value: 'Reclamations'
                 }]
             })
         }
@@ -157,7 +146,7 @@
                 // so we could the address in message instead if 'Existing Address'
                 action: [
                     {
-                  text: 'MySQL',
+                  text: 'search',
                     value: 'MySQL'
                 }]
             })
