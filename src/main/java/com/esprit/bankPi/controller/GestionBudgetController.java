@@ -58,7 +58,7 @@ public class GestionBudgetController {
 
 			data.accumulate("data", clientInstance.toJsonObject());
 			is = new ByteArrayInputStream(data.toString().getBytes());
-			
+
 			loader.setSource(is);
 			Instances instances = loader.getDataSet();
 			instances.setClassIndex(instances.numAttributes() - 1);
@@ -76,7 +76,7 @@ public class GestionBudgetController {
 				data.getJSONArray("data").put(data.getJSONArray("data").length() - 1, clientInstance.toJsonObject());
 				// predict depense of the next month
 				ClientInstance newInst = clientInstance.clone();
-				newInst.setMonth((newInst.getMonth()==12?1:newInst.getMonth()+1));
+				newInst.setMonth((newInst.getMonth() == 12 ? 1 : newInst.getMonth() + 1));
 				newInst.setSavings(null);
 				clientInstance = newInst.clone();
 				data.getJSONArray("data").put(newInst.toJsonObject());
@@ -88,14 +88,21 @@ public class GestionBudgetController {
 				linear.buildClassifier(instances);
 				instance = instances.get(instances.numInstances() - 1);
 				savingprediction = linear.classifyInstance(instance);
-				
-				System.out.println("Date to predicate : "+YearMonth.from(convertToLocalDateViaInstant(targetDate.getTime()))+ " current balance : "+cureentSolde+" saving prediction : "+getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
-				cureentSolde = (float) (cureentSolde + getReelSavingMoney(IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
+
+				Compte compte = client.getCompteList().get(0);
+				System.out.println(
+						"Date to predicate : " + YearMonth.from(convertToLocalDateViaInstant(targetDate.getTime()))
+								+ " current balance : " + cureentSolde + " saving prediction : "
+								+ getReelSavingMoney(
+										IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)),
+										savingprediction));
+				cureentSolde = (double) (cureentSolde + getReelSavingMoney(
+						IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
 				targetDate.add(Calendar.MONTH, 1);
 
-        cureentSolde = (Double) (cureentSolde + getReelSavingMoney(cureentSolde, savingprediction));
+				cureentSolde = (Double) (cureentSolde + getReelSavingMoney(cureentSolde, savingprediction));
 
-				if (targetDate.getTime().getYear()>(Calendar.getInstance().getTime().getYear()+50)) {
+				if (targetDate.getTime().getYear() > (Calendar.getInstance().getTime().getYear() + 50)) {
 					System.out.println("limit reached");
 					break;
 				}
@@ -103,7 +110,7 @@ public class GestionBudgetController {
 			return YearMonth.from(convertToLocalDateViaInstant(new Date(targetDate.getTime().getTime())));
 		} else {
 			// the client already have the amount of money
-			return  YearMonth.from(convertToLocalDateViaInstant(new Date()));
+			return YearMonth.from(convertToLocalDateViaInstant(new Date()));
 		}
 
 	}
@@ -120,9 +127,9 @@ public class GestionBudgetController {
 					.findFirst().get().getSolde();
 			double toReachGap = targetMoney - cureentSolde;
 			if (toReachGap > 0) {
-				Period period = Period
-						.between(convertToLocalDateViaInstant(new Date()), targetDate.atDay(targetDate.lengthOfMonth()));
-				int nbrOfMonths = period.getMonths()+(period.getYears()*12)+(period.getDays()>0?1:0);
+				Period period = Period.between(convertToLocalDateViaInstant(new Date()),
+						targetDate.atDay(targetDate.lengthOfMonth()));
+				int nbrOfMonths = period.getMonths() + (period.getYears() * 12) + (period.getDays() > 0 ? 1 : 0);
 				double avg = toReachGap / nbrOfMonths;
 				for (int i = 0; i < nbrOfMonths; i++) {
 					savingsSched.put(currentDate.plusMonths(i), avg);
@@ -145,7 +152,7 @@ public class GestionBudgetController {
 		return 2;
 	}
 
-	private JSONObject prepareData() throws Exception{
+	private JSONObject prepareData() throws Exception {
 		JSONObject json = new JSONObject();
 		JSONArray data = new JSONArray();
 		JSONObject clientsJsonObject = new JSONObject();
@@ -154,7 +161,7 @@ public class GestionBudgetController {
 		List<Client> clients = clientRepository.findAll();
 		for (Client client : clients) {
 			Map<YearMonth, Double> savings = TransactionController.getSavings(client);
-			
+
 			for (YearMonth yearMonth : savings.keySet()) {
 				data.put(prepareClientInstance(client, yearMonth, savings.get(yearMonth)).toJsonObject());
 			}
@@ -162,7 +169,7 @@ public class GestionBudgetController {
 		json.put("header", clientsJsonObject);
 		json.put("data", data);
 		return json;
-		 
+
 	}
 
 	private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
@@ -174,7 +181,6 @@ public class GestionBudgetController {
 		Date date = new Date();
 		return date.getMonth();
 	}
-
 
 	@SuppressWarnings("unused")
 	private YearMonth calenderToYearMonth(Calendar cal) {
@@ -198,33 +204,33 @@ public class GestionBudgetController {
 		}
 		return clientInstance;
 	}
-	private JSONObject getJsonAtt() throws JSONException {	
-		
+
+	private JSONObject getJsonAtt() throws JSONException {
+
 		JSONObject monthObject = new JSONObject();
 		monthObject.put("name", "month");
 		monthObject.put("type", "numeric");
-		monthObject.put("weight",Collections.EMPTY_LIST);
-		
+		monthObject.put("weight", Collections.EMPTY_LIST);
+
 		JSONObject ageRangeObject = new JSONObject();
 		ageRangeObject.put("name", "ageRange");
 		ageRangeObject.put("type", "numeric");
 		ageRangeObject.put("weight", Collections.EMPTY_LIST);
-		
+
 		JSONObject savingsObject = new JSONObject();
 		savingsObject.put("name", "savings");
 		savingsObject.put("type", "numeric");
 		savingsObject.put("weight", Collections.EMPTY_LIST);
-		
+
 		JSONObject sexeObject = new JSONObject();
 		sexeObject.put("name", "sexe");
 		sexeObject.put("type", "numeric");
 		sexeObject.put("weight", Collections.EMPTY_LIST);
-		
+
 		JSONObject civilStateObject = new JSONObject();
 		civilStateObject.put("name", "civilState");
 		civilStateObject.put("type", "numeric");
-		civilStateObject.put("weight",Collections.EMPTY_LIST);
-
+		civilStateObject.put("weight", Collections.EMPTY_LIST);
 
 		JSONObject attributes = new JSONObject();
 		attributes.put("month", monthObject);
@@ -235,5 +241,5 @@ public class GestionBudgetController {
 		return attributes;
 
 	}
-	
+
 }
