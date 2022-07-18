@@ -3,8 +3,12 @@ package com.esprit.bankPi.data;
 import com.esprit.bankPi.enums.ComplaintPriority;
 import com.esprit.bankPi.enums.ComplaintState;
 import com.esprit.bankPi.enums.ComplaintTypes;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.util.Date;
 
 @Entity
@@ -14,17 +18,27 @@ public class Complaint {
     private Long id ;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+  //  @Column(nullable=true)
     public Client client;
+    
     @Enumerated(EnumType.STRING)
     private ComplaintTypes Types ;
+    
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private Date creationDate ;
 
-
+    @Column(nullable = true)
     private Date  closingDate ;
+    
     @Enumerated(EnumType.STRING)
-    private ComplaintState currentState ;
+    @Column(columnDefinition = "varchar(32) default 'WAITING'")
+    private ComplaintState currentState = ComplaintState.WAITING;
+    
     @Enumerated(EnumType.STRING)
     private ComplaintPriority  priority ;
+    
     private String description;
 
     public ComplaintTypes getTypes() {
