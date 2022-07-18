@@ -41,8 +41,9 @@ public class GestionBudgetController {
 	public YearMonth getWhenReachTarget(Long idUser, Float target, Long numeroCompte) throws Exception {
 		// get rest money to reach
 		Client client = clientRepository.getById(idUser);
-		Double cureentSolde = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte()))
-				.findFirst().get().getSolde();
+		Compte compte = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte()))
+				.findFirst().get();
+		double cureentSolde = compte.getSolde();
 		double toReachGap = target - cureentSolde;
 
 		if (toReachGap > 0) {
@@ -89,7 +90,6 @@ public class GestionBudgetController {
 				instance = instances.get(instances.numInstances() - 1);
 				savingprediction = linear.classifyInstance(instance);
 
-				Compte compte = client.getCompteList().get(0);
 				System.out.println(
 						"Date to predicate : " + YearMonth.from(convertToLocalDateViaInstant(targetDate.getTime()))
 								+ " current balance : " + cureentSolde + " saving prediction : "
