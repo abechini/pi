@@ -9,7 +9,6 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name="data_Deposit")
 @Data
 public class DepositPojo extends TransactionPojo{
 	

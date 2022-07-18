@@ -3,7 +3,10 @@ package com.esprit.bankPi.resources;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.esprit.bankPi.data.Compte;
 import com.esprit.bankPi.data.TransfertPojo;
@@ -13,6 +16,7 @@ import com.esprit.bankPi.model.Transfert;
 import com.esprit.bankPi.repository.CompteRepository;
 import com.esprit.bankPi.repository.TransfertRepository;
 
+@Service
 public class TransfertServiceImpl implements ITransfertService {
 
 	@Autowired
@@ -27,12 +31,12 @@ public class TransfertServiceImpl implements ITransfertService {
 	}
 
 	@Override
-	public void makeTransfert(double amount, CurrencyEnum currency, String reciver, String sender, String npl)
+	@Transactional
+	public synchronized TransfertPojo makeTransfert(double amount, CurrencyEnum currency, String reciver, String sender, String npl)
 			throws TransactionException {
 
-		Compte compte = new Compte();
-//				.findByClientName(reciver)
-//				.orElseThrow(() -> new TransactionException("Acount not found!"));
+		Compte compte = compteRepository.findByClientName(reciver)
+				.orElseThrow(() -> new TransactionException("Acount not found!"));
 
 		TransfertPojo transfert = new TransfertPojo();
 		transfert.setAmount_in_number(amount);
@@ -43,15 +47,16 @@ public class TransfertServiceImpl implements ITransfertService {
 		transfert.setNpl(npl);
 		transfert.setTransaction_date(new Date());
 
-		transfertRepository.save(transfert);
+		compte.setSolde(compte.getSolde() + amount);
+		compteRepository.save(compte);
+		
+		return transfertRepository.save(transfert);
 
 	}
 
 	@Override
-	public List<TransfertPojo> getByCompte(long idCompte) throws TransactionException {
-		return null;
-				
-//				transfertRepository.findByCompte(idCompte);
+	public List<TransfertPojo> getByCompte(long idCompte) throws TransactionException {				
+		return transfertRepository.findByCompte(idCompte);
 	}
 
 }

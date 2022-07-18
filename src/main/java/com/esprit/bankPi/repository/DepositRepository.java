@@ -8,12 +8,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.esprit.bankPi.data.DepositPojo;
-import com.esprit.bankPi.model.Deposit;
 
 @Repository
 public interface DepositRepository extends CrudRepository<DepositPojo, Integer> {
 
-//	@Query("SELECT d FROM data_Deposit WHERE compte.id=:idCompte")
-//	List<DepositPojo> findByCompte(@Param("idCompte") Long idCompte);
+	@Query(value = "SELECT * FROM deposit_pojo d WHERE d.compte_numero_compte=:idCompte", nativeQuery = true)
+	List<DepositPojo> findByCompte(@Param("idCompte") Long idCompte);
 
 }

@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,7 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.esprit.bankPi.enums.CompteType;
-import com.esprit.bankPi.enums.Currency;
+import com.esprit.bankPi.enums.CurrencyEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //JPA Annotations
@@ -24,7 +22,7 @@ public class Compte {
 
 	private Long numeroCompte;
 	private Double solde;
-	private Currency currency;
+	private CurrencyEnum currency;
 	private CompteType type;
 	@JsonIgnoreProperties("compteId")
 	private CheckBook checkBook;
@@ -36,7 +34,6 @@ public class Compte {
 	private Client client;
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@javax.persistence.Column(name = "numeroCompte", unique = true, nullable = false, insertable = true, updatable = false)
 	public Long getNumeroCompte() {
 		return numeroCompte;
@@ -55,11 +52,11 @@ public class Compte {
 	}
 	
 	@javax.persistence.Column(name = "currency", unique = false, nullable = false, insertable = true, updatable = true)
-	public Currency getCurrency() {
+	public CurrencyEnum getCurrency() {
 		return currency;
 	}
 
-	public void setCurrency(Currency currency) {
+	public void setCurrency(CurrencyEnum currency) {
 		this.currency = currency;
 	}
 	
@@ -93,7 +90,7 @@ public class Compte {
 	public void setBankCartes(List<BankCarte> bankCartes) {
 		this.bankCartes = bankCartes;
 	}
-	
+
 	@OneToMany(cascade = CascadeType.ALL , orphanRemoval = true)
 	//(fetch = FetchType.LAZY, mappedBy = "compteId")
 	//@javax.persistence.Column(name = "incomes", unique = false, nullable = true, insertable = true, updatable = true)
