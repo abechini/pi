@@ -1,10 +1,11 @@
 package com.esprit.bankPi.chat;
+
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.esprit.bankPi.model.Reclamation;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,103 +13,96 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-import java.sql.Connection;
 import java.util.*;
+import java.util.Map.Entry;
 public class ChatBotSearchUtil {
-	 public enum KEYWORD {
-	        MYSQL
-	    }
+
+    protected final static String INVALID_YEAR_WARNING = "Your input year is invalid!";
+
+    protected final static String INVALID_QUERY_WARNING = "Invalid query format, please check query rules and retry!";
+
+    protected final static int MAX_HIT = 100000;
+
+    public static HashMap<String, String> fileNameMap, tableNameMap, historyResultMap;
+
+    public static HashMap<String, Double>  MySQLQA;
+
+    public static HashMap<String, Integer>  MySQLCount;
 
 
-	    protected final static String INVALID_YEAR_WARNING = "Your input year is invalid!";
+    public static Set<Map.Entry<String, String>> entrySet;
 
-	    protected final static String INVALID_QUERY_WARNING = "Invalid query format, please check query rules and retry!";
+    public static String cacheHistResult;
 
-	    protected final static int MAX_HIT = 100000;
+    public static double startTime = 0;
 
-	    public static HashMap<String, String> fileNameMap, tableNameMap, historyResultMap;
+    public static ArrayList<Integer> xCount;
 
-	    public static HashMap<String, Double>  MySQLQA;
-
-	    public static HashMap<String, Integer>  MySQLCount;
+    public static ArrayList<Double>  yMySQLRunTime;
 
 
-	    public static Set<Map.Entry<String, String>> entrySet;
+    static Connection connection = null;
 
-	    public static String cacheHistResult;
+ 
 
-	    public static double startTime = 0;
+    static {
+        /*
+            Initialize global variables: fileNameMap, sqlTableNameMap
+         */
+  
+        tableNameMap = new HashMap<>();
+        tableNameMap.put("Small", "reclamation");
+        tableNameMap.put("Medium", "reclamation");
+        tableNameMap.put("Large", "reclamation");
 
-	    public static ArrayList<Integer> xCount;
-
-	    public static ArrayList<Double>  yMySQLRunTime;
-
-
-	    static Connection connection = null;
-
-	 
-
-	    static {
-	        /*
-	            Initialize global variables: fileNameMap, sqlTableNameMap
-	         */
-	  
-	        tableNameMap = new HashMap<>();
-	        tableNameMap.put("Small", "reclamation");
-	        tableNameMap.put("Medium", "reclamation");
-	        tableNameMap.put("Large", "reclamation");
-
-	        MySQLQA = new HashMap<>();
-	        MySQLCount = new HashMap<>();
+        MySQLQA = new HashMap<>();
+        MySQLCount = new HashMap<>();
 
 
-	        /*
-	            in historyResultMap, we need to store <key, value> as <userInput, queryResult>;
-	         */
-	        historyResultMap = new HashMap<>();
-	        entrySet = historyResultMap.entrySet();
+        /*
+            in historyResultMap, we need to store <key, value> as <userInput, queryResult>;
+         */
+        historyResultMap = new HashMap<>();
+        entrySet = historyResultMap.entrySet();
 
-	        /*
-	            Initialize xCount, yTimeSeries for plotting graphs with x-axis and y-axis
-	         */
-	        xCount = new ArrayList<>();
-	        yMySQLRunTime = new ArrayList<>();
-	    }
+        /*
+            Initialize xCount, yTimeSeries for plotting graphs with x-axis and y-axis
+         */
+        xCount = new ArrayList<>();
+        yMySQLRunTime = new ArrayList<>();
+    }
 
-	    static {
-	        try {
-	            connection = DriverManager.getConnection(
-	                    "jdbc:mysql://localhost:3306/bankPi?useTimezone=true&serverTimezone=UTC",
-	                    "root",
-	                    "root"
-	            );
-	        } catch (SQLException ex) {
-	            System.err.println("Driver not found: " + ex.getMessage());
-	        }
-	    }
-
-
-	    /**
-	     * @param year
-	     * @return if the string is a valid year
-	     */
-	    public static boolean isValidYear(String year) {
-	        if (year.length() == 4)
-	            return true;
-	        else
-	            return false;
-	    }
-
-	    private static void setStartTime() {
-	        startTime = System.currentTimeMillis();
-	    }
-
-	    private static double getRunningTime() {
-	        return System.currentTimeMillis() - startTime;
-	    }
+    static {
+        try {
+            connection = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/bankPi?useTimezone=true&serverTimezone=UTC",
+                    "root",
+                    "root"
+            );
+        } catch (SQLException ex) {
+            System.err.println("Driver not found: " + ex.getMessage());
+        }
+    }
 
 
+    /**
+     * @param year
+     * @return if the string is a valid year
+     */
+    public static boolean isValidYear(String year) {
+        if (year.length() == 4)
+            return true;
+        else
+            return false;
+    }
 
+    private static void setStartTime() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private static double getRunningTime() {
+        return System.currentTimeMillis() - startTime;
+    }
 
 
 	    /**
@@ -184,11 +178,13 @@ public class ChatBotSearchUtil {
 	        String searchYear = "";
 	        String startYear = "";
 	        String endYear = "";
-	        String solution = "";
-	        String sqlTableName = ChatBotSearchUtil.tableNameMap.get(fileType);
-	        String query = "";
-	        String query1 = "";
+	       
 	        
+	        String sqlTableName = ChatBotSearchUtil.tableNameMap.get(fileType);
+	        String query ;
+	      String query1 ;
+	      String query2 ;
+
 	        Statement statement = connection.createStatement();
 	        System.out.println(Arrays.asList(words));
 	        if (words.contains("in")) {
@@ -201,28 +197,42 @@ public class ChatBotSearchUtil {
 	            if (isValidYear(searchYear)) {
 	                query = "SELECT COUNT(*) FROM " + sqlTableName + " WHERE Name like '%" + searchWord +
 	                        "%' AND Date like '" + searchYear + "%'";
-//	                query1 ="SELECT * FROM"+ sqlTableName + " WHERE Name like '%" + searchWord +
-//	                        "%' AND Date like '" + searchYear + "%'";
+	          query1 ="SELECT solution FROM " + sqlTableName + " WHERE Name like '%" + searchWord +
+                      "%' AND Date like '" + searchYear + "%'";
 	               // query1="SELECT solution FROM reclamation where Name like Name and date like 2018;";
 	             //   ResultSet result= statement.executeQuery(query1);
-	               
+	             // query1 = "SELECT solution FROM reclamation where Name like Name and date like 2018";
 	             
+              
+             
+               
+              ResultSet resultSet2 = statement.executeQuery(query1);    
+
+
+	           //     ResultSet resultSet = statement.executeQuery(query);    
 	                
-	                  
+//	                String count = "";
+//	                while (resultSet.next())
+//	                    count = resultSet.getString(1);
+	                String solutions = "<br>";
+	                int count =0;
+	                while (resultSet2.next()) {
+	                    solutions += "- "+resultSet2.getString(1)+"<br>";
+	                    count++;
 	                
-	                
-	                ResultSet resultSet = statement.executeQuery(query);          
-	                String count = "";
-	                while (resultSet.next())
-	                    count = resultSet.getString(1);
-	            
+	                }
 	                double runTime = getRunningTime();
 	            
-	                res = "The total counts in year " + searchYear + " with word: " 
-	                + searchWord + " is " + count  + "  " + "the solution is:  "+ solution;
+	               
+	                
+	                res ="in "+searchYear + " we found "+ count + " reclamations  that have the same Name as yours : "+searchWord + " here is some solutions that can helps you : " + solutions;
 	                MySQLQA.put(fileType, runTime);
-	                MySQLCount.put(fileType, Integer.parseInt(count));
-	                historyResultMap.put(searchContent + " (by MySQL)", res);
+	                MySQLCount.put(fileType, count);
+	         
+	             
+
+	                
+	                historyResultMap.put(searchContent + " (BY reclamations)", res);
 	                return res;
 	            } else
 	                return INVALID_YEAR_WARNING;
@@ -237,16 +247,23 @@ public class ChatBotSearchUtil {
 	            if (isValidYear(startYear) && isValidYear(endYear)) {
 	                query = "SELECT COUNT(*) FROM " + sqlTableName +
 	                        " where REGEXP_LIKE(Name, \'" + searchWord + "\') and convert(substring(Date, 1, 4), SIGNED) between " + Integer.parseInt(startYear) + " and " + Integer.parseInt(endYear) + ";";
+	                query2 = "SELECT solution FROM " + sqlTableName +
+	                        " where REGEXP_LIKE(Name, \'" + searchWord + "\') and convert(substring(Date, 1, 4), SIGNED) between " + Integer.parseInt(startYear) + " and " + Integer.parseInt(endYear) + ";";
 	                System.out.println(query);
 	                ResultSet resultSet = statement.executeQuery(query);
-	                String count = "";
-	                while (resultSet.next())
-	                    count = resultSet.getString(1);
+	                ResultSet resultSet3 = statement.executeQuery(query2);
+	                String solutions = "<br>";
+	                int count =0;
+	                while (resultSet3.next()) {
+	                    solutions +="- "+ resultSet3.getString(1)+"<br>";
+	                    count++;
+	                
+	                }
 	                double runTime = getRunningTime();
-	                res = "Articles count from year " + startYear + " to year " + endYear + " with word: " + searchWord + " is " + count + ". (response time:" + runTime + " ms)"  + "  "+ "the solution is: ";
-	                MySQLQA.put(fileType, runTime);
-	                MySQLCount.put(fileType, Integer.parseInt(count));
-	                historyResultMap.put(searchContent+ " (by MySQL)", res);
+	                
+	                res = "from "+startYear+ " to "+endYear+" we found "+count +" reclamations tha have the same name of your problem :"+searchWord + " here is some solutions that can helps you :"+solutions +"<br>"+". (response time:" + runTime + " ms)";
+	                MySQLCount.put(fileType, count);
+	                historyResultMap.put(searchContent+ " (View Solutions)", res);
 	                return res;
 	            } else {
 	                return INVALID_YEAR_WARNING;
@@ -265,6 +282,7 @@ public class ChatBotSearchUtil {
 	            res += "- Asked: " + history.getKey() + "<br>" + "- Answered: " + history.getValue() + "<br><br>";
 	        return res;
 	    }
+	   
 
 	    public static String searchCacheHist(String searchWord, String searchYear) {
 	        for (Map.Entry<String, String> history : entrySet) {
