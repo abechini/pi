@@ -13,7 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.esprit.bankPi.enums.CompteType;
-import com.esprit.bankPi.enums.Currency;
+import com.esprit.bankPi.enums.CurrencyEnum;
 import com.esprit.bankPi.util.CompteUtility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -35,7 +35,9 @@ public class Compte {
 	private List<Income> incomes;
 	@JsonIgnoreProperties("compteList")
 	private Client client;
-	
+	private boolean isActive;
+	private double negativeCeiling;
+
 	@Id
 //@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@javax.persistence.Column(name = "numeroCompte", unique = true, nullable = false, insertable = true, updatable = false)
@@ -131,5 +133,22 @@ public class Compte {
 
 	public void setClient(Client client) {
 		this.client = client;
+	}
+	
+	@javax.persistence.Column(name = "isActive", unique = false, nullable = true, insertable = true, updatable = true)
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	@javax.persistence.Column(name = "negativeCeiling", unique = false, nullable = true, insertable = true, updatable = true)
+	public double getNegativeCeiling() {
+		return negativeCeiling;
+	}
+
+	public void setNegativeCeiling(double negativeCeiling) {
+		this.negativeCeiling = negativeCeiling;
 	}
 }

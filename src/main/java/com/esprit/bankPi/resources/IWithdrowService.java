@@ -7,7 +7,7 @@ import com.esprit.bankPi.exceptions.TransactionException;
 
 public interface IWithdrowService {
 
-	WithdrowPojo makeWithdraw(long acountId, double amount) throws TransactionException;
+	WithdrowPojo makeWithdraw(String rib, double amount) throws TransactionException;
 
 	List<WithdrowPojo> getAllWithdraw(long accountId) throws TransactionException;
 

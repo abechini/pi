@@ -11,8 +11,14 @@ public interface ITransfertService {
 
 	public List<Transfert> getAllTransfert() throws TransactionException;
 
-	public TransfertPojo makeTransfert(double amount, CurrencyEnum currency , String reciver, String sender, String npl) throws TransactionException;
+	public TransfertPojo makeTransfert(double amount, CurrencyEnum currency, String reciver, String sender,
+			String nplReciever) throws TransactionException;
+	
+	public TransfertPojo accpetTransfert(double amount, CurrencyEnum currency, String reciver, String sender,
+			String nplReciever) throws TransactionException;
 
 	public List<TransfertPojo> getByCompte(long idCompte) throws TransactionException;
+
+	public TransfertPojo makeTransfert1(TransfertPojo transfert) throws TransactionException;
 
 }
