@@ -24,9 +24,6 @@ public class Credit {
 	    private CreditStatus creditStatus;
 	    private Integer creditTerm;
 	    private Double creditAmount;
-	    private Boolean creditRepayment;
-	    private Double creditRepaymentAmount;
-	    private Double creditRepaymentInterest;
 	    private Double creditInterest;
 	    private Double creditFees;
 	    @DateTimeFormat(pattern = Patterns.DATE_FORMAT)
@@ -115,29 +112,7 @@ public class Credit {
 	        this.creditAmount = creditAmount;
 	    }
 
-	    public Boolean getCreditRepayment() {
-	        return creditRepayment;
-	    }
-
-	    public void setCreditRepayment(Boolean creditRepayment) {
-	        this.creditRepayment = creditRepayment;
-	    }
-
-	    public Double getCreditRepaymentAmount() {
-	        return creditRepaymentAmount;
-	    }
-
-	    public void setCreditRepaymentAmount(Double creditRepaymentAmount) {
-	        this.creditRepaymentAmount = creditRepaymentAmount;
-	    }
-
-	    public Double getCreditRepaymentInterest() {
-	        return creditRepaymentInterest;
-	    }
-
-	    public void setCreditRepaymentInterest(Double creditRepaymentInterest) {
-	        this.creditRepaymentInterest = creditRepaymentInterest;
-	    }
+	  
 
 	    public Double getCreditInterest() {
 	        return creditInterest;

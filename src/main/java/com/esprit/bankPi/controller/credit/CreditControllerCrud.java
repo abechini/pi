@@ -2,6 +2,8 @@ package com.esprit.bankPi.controller.credit;
 import com.esprit.bankPi.model.credit.Credit;
 import com.esprit.bankPi.service.credit.CreditService;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,6 +38,7 @@ public class CreditControllerCrud {
     public ResponseEntity<Credit> getCredit(@PathVariable(value = "id") Integer id) throws Exception {
         return new ResponseEntity<>(creditService.getCredit(id), HttpStatus.OK);
     }
+   
 
 
 
