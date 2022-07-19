@@ -2,9 +2,9 @@ package com.esprit.bankPi;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +15,7 @@ import com.esprit.bankPi.data.Client;
 import com.esprit.bankPi.data.Compte;
 import com.esprit.bankPi.data.DepositPojo;
 import com.esprit.bankPi.data.Income;
+import com.esprit.bankPi.data.TransfertPojo;
 import com.esprit.bankPi.enums.CivilState;
 import com.esprit.bankPi.enums.CompteType;
 import com.esprit.bankPi.enums.CurrencyEnum;
@@ -26,7 +27,9 @@ import com.esprit.bankPi.repository.ClientRepository;
 import com.esprit.bankPi.repository.CompteRepository;
 import com.esprit.bankPi.repository.DepositRepository;
 import com.esprit.bankPi.repository.IncomeRepository;
+import com.esprit.bankPi.repository.TransfertRepository;
 import com.esprit.bankPi.resources.IDepositService;
+import com.esprit.bankPi.resources.ITransfertService;
 
 @SpringBootApplication
 public class PiBankApplication {
@@ -81,15 +84,24 @@ public class PiBankApplication {
 	public void setCompteRepo(CompteRepository repo) {
 		this.compteRepository = repo;
 	}
+	
+	static TransfertRepository iTransfertService;
+	
+	@Autowired
+	public void setTransfer( TransfertRepository t ) {
+		this.iTransfertService = t;
+	}
 
 	public static void main(String[] args) throws TransactionException {
 
 		SpringApplication.run(PiBankApplication.class, args);
+		
+		Compte compte = new Compte();
+
 
 		for (int i = 0; i < 200; i++) {
 			Client client = new Client();
 			Agency agency = new Agency();
-			Compte compte = new Compte();
 			Income income = new Income();
 			List<Income> listIncome = new ArrayList<Income>();
 			income.setIncomeType(IncomeType.SALARY);
@@ -117,7 +129,7 @@ public class PiBankApplication {
 			compte.setType(CompteType.SAVING);
 			client.setCin(Math.random() + "");
 			// incomeRepository.save(income);
-			clientRepository.save(client);
+//			clientRepository.save(client);
 			// compteRepository.save(compte);
 		}
 		Compte c = new Compte();
@@ -127,6 +139,8 @@ public class PiBankApplication {
 		c.setNumeroCompte(2l);
 
 		compteRepository.save(c);
+		
+
 
 		for (int i = 0; i < 5; i++) {
 
@@ -135,10 +149,25 @@ public class PiBankApplication {
 			d.setCompte(c);
 			d.setAmount_in_number(i);
 			d.setCurrency(CurrencyEnum.TND);
+			
+			TransfertPojo t = new TransfertPojo();
+		     t.setTransaction_date(new Date());
+		     t.setAmount("30 euro");
+		     t.setAmount_in_number(30d);
+		     t.setCurrency(CurrencyEnum.EUR);
+		     t.setDescription("description");
+		     t.setReciver("bechini");
+		     t.setSender("yass");
+		     t.setNpl("TN93-1234-9999-650");
+		     t.setCompte(c);
+		     
+		     
+		     iTransfertService.save(t);
 
-//			depositRepository.save(d);
+//			depositService.deposit(i + 5, CurrencyEnum.TND, Integer.toString(i + 5));
 
-			depositService.deposit(i + 5, CurrencyEnum.TND, c.getNumeroCompte());
+			depositRepository.save(d);
+
 		}
 
 //		for (int i = 0; i < 10; i++) {

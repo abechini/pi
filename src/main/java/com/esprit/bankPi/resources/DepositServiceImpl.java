@@ -3,6 +3,7 @@ package com.esprit.bankPi.resources;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.StreamSupport;
 
 import javax.transaction.Transactional;
 
@@ -13,7 +14,6 @@ import com.esprit.bankPi.data.Compte;
 import com.esprit.bankPi.data.DepositPojo;
 import com.esprit.bankPi.enums.CurrencyEnum;
 import com.esprit.bankPi.exceptions.TransactionException;
-import com.esprit.bankPi.model.Deposit;
 import com.esprit.bankPi.repository.CompteRepository;
 import com.esprit.bankPi.repository.DepositRepository;
 
@@ -27,11 +27,16 @@ public class DepositServiceImpl implements IDepositService {
 	CompteRepository compteRepository;
 
 	@Transactional
-	public synchronized DepositPojo deposit(double amount, CurrencyEnum currency, long idCompte) throws TransactionException {
+	public synchronized DepositPojo deposit(double amount, CurrencyEnum currency, String rib) throws TransactionException {
 
-		Compte compte = compteRepository.findById(idCompte)
-				.orElseThrow(() -> new TransactionException("Compte not found"));
-
+		Compte compte = StreamSupport.stream(compteRepository.findAll().spliterator(), false)
+				.filter(c -> c.getRib().equals(rib)).findFirst()
+				.orElseThrow(() -> new TransactionException("Compte nor found exception!"));
+		
+		if(!compte.isActive()) {
+			throw new TransactionException("Account is not active transaction not alloud");
+		}
+				
 		DepositPojo deposit = new DepositPojo();
 		deposit.setAmount_in_number(amount);
 		deposit.setCompte(compte);
