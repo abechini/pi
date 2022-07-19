@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @RequestMapping(path = "api/user")
 public class KeyCloakController {
-    @Autowired
+	@Autowired
 	KeyCloakService service;
 
 	@PostMapping
@@ -50,15 +50,15 @@ public class KeyCloakController {
 		return "User Deleted Successfully.";
 	}
 
-	@GetMapping(path = "/verification-link/{userId}")
-	public String sendVerificationLink(@PathVariable("userId") String userId) {
-		service.sendVerificationLink(userId);
+	@GetMapping(path = "/verification-link/{userName}")
+	public String sendVerificationLink(@PathVariable("userName") String userName) {
+		service.sendVerificationLink(userName);
 		return "Verification Link Send to Registered E-mail Id.";
 	}
 
-	@GetMapping(path = "/reset-password/{userId}")
-	public String sendResetPassword(@PathVariable("userId") String userId) {
-		service.sendResetPassword(userId);
+	@GetMapping(path = "/reset-password/{userName}")
+	public String sendResetPassword(@PathVariable("userName") String userName) {
+		service.sendResetPassword(userName);
 		return "Reset Password Link Send Successfully to Registered E-mail Id.";
 	}
 }

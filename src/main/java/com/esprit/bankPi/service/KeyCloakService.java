@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.esprit.bankPi.data.UserDTO;
 import com.esprit.bankPi.keycloak.Credentials;
+
 @Service
 public class KeyCloakService {
 
@@ -55,14 +56,17 @@ public class KeyCloakService {
 		usersResource.get(userId).remove();
 	}
 
-	public void sendVerificationLink(String userId) {
+	public void sendVerificationLink(String userName) {
+		List<UserRepresentation> userRepresenation = getUser(userName);
+		String userId = userRepresenation.get(0).getId();
 		UsersResource usersResource = getInstance();
 		usersResource.get(userId).sendVerifyEmail();
 	}
 
-	public void sendResetPassword(String userId) {
+	public void sendResetPassword(String userName) {
+		List<UserRepresentation> userRepresenation = getUser(userName);
+		String userId = userRepresenation.get(0).getId();
 		UsersResource usersResource = getInstance();
-
 		usersResource.get(userId).executeActionsEmail(Arrays.asList("UPDATE_PASSWORD"));
 	}
 
