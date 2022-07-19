@@ -22,9 +22,11 @@ public class CreditRequestController {
 
 	   
 //add Resquest
-	    @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	
+	 
+	 @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	    @ResponseStatus(HttpStatus.CREATED)
-	    public ResponseEntity<CreditRequest> createCreditRequest(@RequestBody CreditRequest creditRequest, @PathVariable(value = "id") Integer id) throws Exception {
+	    public ResponseEntity<String> createCreditRequest(@RequestBody CreditRequest creditRequest, @PathVariable(value = "id") Integer id) throws Exception {
 	        return new ResponseEntity<>(creditRequestService.addCreditRequest(creditRequest,id), HttpStatus.OK);
 	    }
 //deleteCreditRequest
@@ -56,12 +58,14 @@ public class CreditRequestController {
 	    }
 	    
 	 
-//rejectCreditRequest
-	    @PutMapping(value = "/{id}/reject", produces = MediaType.APPLICATION_JSON_VALUE)
+//rejectCreditRequest   suggestCreditRequest
+	    @PutMapping(value = "/{id}/suggest", produces = MediaType.APPLICATION_JSON_VALUE)
 	    @ResponseStatus(HttpStatus.OK)
 	    public ResponseEntity<CreditRequest> rejectCreditRequest(@PathVariable(value = "id") Integer id) throws Exception {
 	        return new ResponseEntity<>(creditRequestService.rejectCreditRequest(id), HttpStatus.OK);
 	    }
+	    
+	    
 //acceptCreditRequestChanges
 	    @PutMapping(value = "/{id}/client-accept", produces = MediaType.APPLICATION_JSON_VALUE)
 	  //  @ResponseStatus(HttpStatus.OK)

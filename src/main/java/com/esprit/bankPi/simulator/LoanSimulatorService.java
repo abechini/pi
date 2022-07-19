@@ -13,20 +13,23 @@ import org.springframework.stereotype.Service;
 
 @Service
 
+
+
+
 public class LoanSimulatorService {
     private static final Logger LOG = LoggerFactory.getLogger(LoanSimulatorService.class);
-  
-
+ 
+  //mensualité formule mathématique = [(M*t)/12] / [1-(1+(t/12))^-n].
     public String calculateCreditMentuality(double loanAmount, double intrestRate, double months) {
         double t = intrestRate / 100;
-        //Mensualité = [capital × (taux/12)]/[1 – (1 + (taux/12) – (12 × nombre d’années de remboursement))] 
-        double t1 = loanAmount * t / 12;
-   //   double t2 = (1 - (1 + (t /12) - months));
+        double t1 = (loanAmount * t) / 12;
+  //[1-(1+(t/12))^-n]
       double t2 = 1 - Math.pow(1 + t / 12, -months);
      
-        return "  Monthly loan payment ="+(t1 / t2)+" DT" + "    ===>   The amount of interest added per month ="+(t1/ (1 - (1 + (t /12) - months))) +" DT"  ;
+        return "  Monthly loan payment ="+(t1 / t2)+" DT" ;
     }
-
+    
+//CAR
     public String calculateCarCreditMentuality(double loanAmount, double months) {
         double intrestRate = 0;
         if (months < 36) {

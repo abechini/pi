@@ -27,12 +27,12 @@ public class CreditRequest {
     private CreditRequestStatus creditRequestStatus;
     private Integer creditTerm;
     private Double creditAmount;
-    private Boolean creditRepayment;
-    private Double creditRepaymentAmount;
+   
+   
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "insurance_id")
     private Insurance insurance;
-    private CreditType type;
+    private CreditType creditType;
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "creditRequest")
     @JsonIgnore
     private Credit credit;
@@ -86,12 +86,12 @@ public class CreditRequest {
         this.age = age;
     }
 
-    public CreditType getType() {
-        return type;
+    public CreditType getCreditType() {
+        return creditType;
     }
 
-    public void setType(CreditType type) {
-        this.type = type;
+    public void setCreditType(CreditType creditType) {
+        this.creditType = creditType;
     }
 
     public Long getId() {
@@ -116,22 +116,6 @@ public class CreditRequest {
 
     public void setCreditAmount(Double creditAmount) {
         this.creditAmount = creditAmount;
-    }
-
-    public Boolean getCreditRepayment() {
-        return creditRepayment;
-    }
-
-    public void setCreditRepayment(Boolean creditRepayment) {
-        this.creditRepayment = creditRepayment;
-    }
-
-    public Double getCreditRepaymentAmount() {
-        return creditRepaymentAmount;
-    }
-
-    public void setCreditRepaymentAmount(Double creditRepaymentAmount) {
-        this.creditRepaymentAmount = creditRepaymentAmount;
     }
 
     public Insurance getInsurance() {
