@@ -1,83 +1,143 @@
 package com.esprit.bankPi.data;
 
+import com.esprit.bankPi.enums.AppointmentStatus;
 import com.esprit.bankPi.enums.AppoitementType;
 
 import javax.persistence.*;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Table(name="data_Appoitement")
-public class Appoitement {
-    public Appoitement() {
-    }
+@Table(name = "data_Appoitement")
+public class Appoitement implements Comparable<Appoitement> {
+	public Appoitement() {
+	}
 
-    @Id
-    private Long id;
-    private Date date;
-    @Enumerated(EnumType.STRING)
-    private AppoitementType Types ;
-    private  String description ;
-    @ManyToOne
-    Client client ;
-    @ManyToOne
-    Agent agent ;
+	@Id
+	private Long id;
+	private Date date;
 
-    public Client getClient() {
-        return client;
-    }
+	@Column(name = "start")
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private LocalDateTime start;
 
-    public void setClient(Client client) {
-        this.client = client;
-    }
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	@Column(name = "end")
+	private LocalDateTime end;
 
-    public Agent getAgent() {
-        return agent;
-    }
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	@Column(name = "canceled_at", nullable = true)
+	private LocalDateTime canceledAt;
 
-    public void setAgent(Agent agent) {
-        this.agent = agent;
-    }
+	public LocalDateTime getStart() {
+		return start;
+	}
 
-    public Appoitement(Long id, Date date, AppoitementType types, String description) {
-        this.id = id;
-        this.date = date;
-        Types = types;
-        this.description = description;
-    }
+	public void setStart(LocalDateTime start) {
+		this.start = start;
+	}
 
-    public AppoitementType getTypes() {
-        return Types;
-    }
+	public LocalDateTime getEnd() {
+		return end;
+	}
 
-    public void setTypes(AppoitementType types) {
-        Types = types;
-    }
+	public void setEnd(LocalDateTime end) {
+		this.end = end;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public LocalDateTime getCanceledAt() {
+		return canceledAt;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setCanceledAt(LocalDateTime canceledAt) {
+		this.canceledAt = canceledAt;
+	}
 
-    public Date getDate() {
-        return date;
-    }
+	
+	public AppointmentStatus getState() {
+		return state;
+	}
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+	public void setState(AppointmentStatus state) {
+		this.state = state;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	@Enumerated(EnumType.STRING)
+	private AppoitementType Types;
+	private String description;
 
+	@Column(columnDefinition = "varchar(32) default 'SCHEDULED'")
+	@Enumerated(EnumType.STRING)
+	private AppointmentStatus state;
+	@ManyToOne
+	Client client;
+	@ManyToOne
+	Agent agent;
 
+	public Client getClient() {
+		return client;
+	}
 
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+	public Agent getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Agent agent) {
+		this.agent = agent;
+	}
+
+	public Appoitement(Long id, Date date, AppoitementType types, String description) {
+		this.id = id;
+		this.date = date;
+		Types = types;
+		this.description = description;
+	}
+
+	public AppoitementType getTypes() {
+		return Types;
+	}
+
+	public void setTypes(AppoitementType types) {
+		Types = types;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public int compareTo(Appoitement o) {
+		return this.getStart().compareTo(o.getStart());
+
+	}
 
 }
