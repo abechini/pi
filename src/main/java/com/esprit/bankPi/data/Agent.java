@@ -1,34 +1,85 @@
 package com.esprit.bankPi.data;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+
 import java.util.List;
 
 @Entity
 public class Agent {
  @Id
     private Long id ;
-    private String name ;
+	private String lastName;
+	private String firstName;
     private  String address ;
+    @Column(columnDefinition = "boolean default true")
+    private boolean status ; 
     @OneToMany
     List<Appoitement> appoitementList ;
+    
+    @OneToOne(mappedBy = "agent", cascade = {CascadeType.ALL})
+    private WorkingPlan workingPlan;
+    @ManyToOne
+    Agency agency ;
 
+    public WorkingPlan getWorkingPlan() {
+		return workingPlan;
+	}
 
-    @OneToMany
-    List<Agency> agencyList ;
+	public void setWorkingPlan(WorkingPlan workingPlan) {
+		this.workingPlan = workingPlan;
+	}
 
-    public Agent() {
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public Agency getAgency() {
+		return agency;
+	}
+
+	public void setAgency(Agency agency) {
+		this.agency = agency;
+	}
+
+	public Agent() {
 
     }
 
-    public Agent(String name, String address, List<Agency> agencyList) {
-        this.name = name;
+    public Agent(String lastName, String firstName , String address,Agency agency) {
+        this.lastName = lastName ;
+        this.firstName = firstName ;
         this.address = address;
-        this.agencyList = agencyList;
+        this.agency = agency;
     }
 
-    public List<Appoitement> getAppoitementList() {
+    public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public List<Appoitement> getAppoitementList() {
         return appoitementList;
     }
 
@@ -45,13 +96,7 @@ public class Agent {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+  
 
     public String getAddress() {
         return address;
@@ -61,13 +106,7 @@ public class Agent {
         this.address = address;
     }
 
-    public List<Agency> getAgencyList() {
-        return agencyList;
-    }
-
-    public void setAgencyList(List<Agency> agencyList) {
-        this.agencyList = agencyList;
-    }
+  
 
 
 

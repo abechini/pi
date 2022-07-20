@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface AgencyRepository  extends JpaRepository<Agency,Long> {
     public void deleteByName(String name);
     public Agency save(Agency agency) ;
-    public void findAllByAgent_Name(String nameAgent) ;
+    public void findAllByAgent(String nameAgent) ;
 
 }
