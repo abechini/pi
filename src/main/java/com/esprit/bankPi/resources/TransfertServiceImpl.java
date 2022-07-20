@@ -2,6 +2,7 @@ package com.esprit.bankPi.resources;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 import javax.transaction.Transactional;
 
@@ -39,72 +40,52 @@ public class TransfertServiceImpl implements ITransfertService {
 
 	@Override
 	@Transactional
-	public synchronized TransfertPojo accpetTransfert(double amount, CurrencyEnum currency, String reciver,
-			String sender, String nplReciever) throws TransactionException {
+	public synchronized TransfertPojo accpetTransfert(TransfertPojo transfert) throws TransactionException {
 
-		Compte compte = compteRepository.findByClientName(reciver)
-				.orElseThrow(() -> new TransactionException("Acount not found!"));
+		Compte compte = StreamSupport.stream(compteRepository.findAll().spliterator(), true)
+				.filter(c -> c.getRib().equals(transfert.getNpl())).findFirst()
+				.orElseThrow(() -> new TransactionException("Account not found!"));
 
 		if (!compte.isActive()) {
 			throw new TransactionException("Account is not active transaction not alloud");
 		}
 
-		TransfertPojo transfert = new TransfertPojo();
+		double realAmount = TransactionUtil.getRealAmount(transfert.getAmount_in_number(), transfert.getCurrency(),
+				compte.getCurrency());
 
-		transfert.setAmount_in_number(TransactionUtil.getRealAmount(amount, currency, compte.getCurrency()));
-
-		transfert.setCurrency(currency);
 		transfert.setCompte(compte);
-		transfert.setReciver(reciver);
-		transfert.setSender(sender);
-		transfert.setNpl(nplReciever);
-		transfert.setTransaction_date(new Date());
 
-		depositService.deposit(amount, currency, nplReciever);
+		compte.setSolde(compte.getSolde() + realAmount);
+
+		compteRepository.save(compte);
 
 		return transfertRepository.save(transfert);
 	}
 
 	@Override
 	@Transactional
-	public synchronized TransfertPojo makeTransfert(double amount, CurrencyEnum currency, String reciver, String sender,
-			String nplReciever) throws TransactionException {
+	public synchronized TransfertPojo makeTransfert(TransfertPojo transfert, long idCompte)
+			throws TransactionException {
 
-		Compte compte = compteRepository.findByClientName(reciver)
+		Compte compte = compteRepository.findById(idCompte)
 				.orElseThrow(() -> new TransactionException("Account not found!"));
 
 		if (!compte.isActive()) {
 			throw new TransactionException("Account is not active transaction not alloud");
 		}
 
-		TransfertPojo transfert = new TransfertPojo();
+		double realAmount = TransactionUtil.getRealAmount(transfert.getAmount_in_number(), transfert.getCurrency(),
+				compte.getCurrency());
 
-		transfert.setAmount_in_number(TransactionUtil.getRealAmount(amount, currency, compte.getCurrency()));
+		if (!TransactionUtil.hasSuffisantSolde(realAmount, compte.getSolde(), compte.getNegativeCeiling())) {
+			throw new TransactionException("Insuffisant solde in the account!");
+		}
 
-		transfert.setCurrency(currency);
 		transfert.setCompte(compte);
-		transfert.setReciver(reciver);
-		transfert.setSender(sender);
-		transfert.setNpl(nplReciever);
-		transfert.setTransaction_date(new Date());
 
-		withdrowService.makeWithdraw(compte.getRib(), amount);
+		compte.setSolde(compte.getSolde() - realAmount);
 
-		return transfertRepository.save(transfert);
-	}
-
-	@Transactional
-	public synchronized TransfertPojo makeTransfert1(TransfertPojo transfert) throws TransactionException {
-
-		Compte compte = compteRepository.findByClientName(transfert.getReciver())
-				.orElseThrow(() -> new TransactionException("Account not found!"));
-
-		if (!compte.isActive()) {
-			throw new TransactionException("Account is not active transaction not alloud");
-		}
-
-		withdrowService.makeWithdraw(compte.getRib(), TransactionUtil.getRealAmount(transfert.getAmount_in_number(),
-				transfert.getCurrency(), compte.getCurrency()));
+		compteRepository.save(compte);
 
 		return transfertRepository.save(transfert);
 	}

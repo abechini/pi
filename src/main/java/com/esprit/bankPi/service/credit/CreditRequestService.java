@@ -45,7 +45,7 @@ public class CreditRequestService {
 	    	creditRequest.setCreationDate(new Date());
 	        creditRequest.setCreditRequestStatus(CreditRequestStatus.CREATED);
 	        creditRequest.setCreditType(creditRequest.getCreditType());
-	        creditRequest.setAccount(compteServiceImpl.getAccountById(id.longValue()));
+//	        creditRequest.setAccount(compteServiceImpl.getAccountById(id.longValue()));
 	        //add insurance
 	    /*   
 	        Insurance insurance = new Insurance();

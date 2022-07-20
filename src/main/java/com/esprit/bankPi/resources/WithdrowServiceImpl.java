@@ -14,6 +14,7 @@ import com.esprit.bankPi.data.WithdrowPojo;
 import com.esprit.bankPi.exceptions.TransactionException;
 import com.esprit.bankPi.repository.CompteRepository;
 import com.esprit.bankPi.repository.WithdrowRepository;
+import com.esprit.bankPi.util.TransactionUtil;
 
 @Service
 public class WithdrowServiceImpl implements IWithdrowService {
@@ -36,7 +37,7 @@ public class WithdrowServiceImpl implements IWithdrowService {
 			throw new TransactionException("Account is not active transaction not alloud");
 		}
 
-		if (amount > compte.getSolde()) {
+		if (TransactionUtil.hasSuffisantSolde(amount, compte.getSolde(), compte.getNegativeCeiling())) {
 			throw new TransactionException("Insuffisant solde in the account!");
 		}
 
