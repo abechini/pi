@@ -1,7 +1,8 @@
-package com.esprit.bankPi.CurrencyConverter;
+package com.esprit.bankPi.currencyConverter;
+
 import org.springframework.data.repository.CrudRepository;
 
-import com.esprit.bankPi.CurrencyConverter.CurrencyConverter;
+
 public interface CurrencyConverterRepository extends CrudRepository<CurrencyConverter, Long> {
 
 }

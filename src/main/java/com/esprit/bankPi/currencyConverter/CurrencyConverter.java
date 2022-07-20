@@ -1,4 +1,4 @@
-package com.esprit.bankPi.CurrencyConverter;
+package com.esprit.bankPi.currencyConverter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 @Entity

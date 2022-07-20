@@ -137,7 +137,7 @@ public class PiBankApplication {
 		c.setCurrency(CurrencyEnum.TND);
 		c.setType(CompteType.DEPOSIT);
 		c.setNumeroCompte(2l);
-
+c.setActive(Boolean.TRUE);
 		compteRepository.save(c);
 		
 
@@ -158,7 +158,7 @@ public class PiBankApplication {
 		     t.setDescription("description");
 		     t.setReciver("bechini");
 		     t.setSender("yass");
-		     t.setNpl("TN93-1234-9999-650");
+		     t.setNpl("TN25-1234-9999-2");
 		     t.setCompte(c);
 		     
 		     
