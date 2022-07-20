@@ -14,4 +14,8 @@ public interface TopicService {
 	List<Topic> findAllTopic();
 
 	Topic findTopicById(Long id);
+
+	int increaseLikes(Long id);
+
+	int decreaseLikes(Long id);
 }

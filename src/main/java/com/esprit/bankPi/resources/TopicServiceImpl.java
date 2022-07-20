@@ -38,4 +38,20 @@ public class TopicServiceImpl implements TopicService {
 		return topicRepository.findById(id).get();
 	}
 
+	@Override
+	public int increaseLikes(Long id) {
+		Topic topic = findTopicById(id);
+		topic.setNbrOfLikes(topic.getNbrOfLikes() + 1);
+		topicRepository.save(topic);
+		return topic.getNbrOfLikes();
+	}
+	
+	@Override
+	public int decreaseLikes(Long id) {
+		Topic topic = findTopicById(id);
+		topic.setNbrOfLikes(topic.getNbrOfLikes() - 1);
+		topicRepository.save(topic);
+		return topic.getNbrOfLikes();
+	}
+
 }

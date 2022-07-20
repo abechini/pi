@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.esprit.bankPi.data.Comment;
 import com.esprit.bankPi.data.Topic;
@@ -20,6 +21,7 @@ import com.esprit.bankPi.resources.CommentService;
 import com.esprit.bankPi.resources.TopicService;
 
 @Controller
+@RequestMapping("/api/comments")
 public class CommentController {
 	@Autowired
 	private CommentService commentService;
