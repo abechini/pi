@@ -116,4 +116,11 @@ public class KeyCloakService {
 		}
 	}
 
+	public void deleteRealmRole(String roleName) {
+		Keycloak keycloak = Keycloak.getInstance("http://localhost:8180/auth", "pi", "admin1", "admin1", "pi-app");
+		if (getAllRoles().contains(roleName)) {
+			keycloak.realm("pi").roles().deleteRole(roleName);
+		}
+	}
+
 }

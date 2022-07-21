@@ -2,8 +2,6 @@ package com.esprit.bankPi.controller;
 
 import java.util.List;
 
-import javax.websocket.server.PathParam;
-
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -67,6 +65,12 @@ public class KeyCloakController {
 	public String addRealmRole(@PathVariable(value = "role") String role) {
 		service.addRealmRole(role);
 		return "Role Added Successfully.";
+	}
+	
+	@DeleteMapping(path = "/deleteRole/{role}")
+	public String deleteRealmRole(@PathVariable(value = "role") String role) {
+		service.deleteRealmRole(role);
+		return "Role Deleted Successfully.";
 	}
 
 	@GetMapping(path = "/getAllRoles")
