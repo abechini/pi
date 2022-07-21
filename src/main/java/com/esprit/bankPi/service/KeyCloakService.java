@@ -2,14 +2,17 @@ package com.esprit.bankPi.service;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
 
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,15 +30,25 @@ public class KeyCloakService {
 		CredentialRepresentation credential = Credentials.createPasswordCredentials(userDTO.getPassword());
 		UserRepresentation user = new UserRepresentation();
 		user.setUsername(userDTO.getUserName());
-		user.setFirstName(userDTO.getFirstname());
+		user.setFirstName(userDTO.getFirstName());
 		user.setLastName(userDTO.getLastName());
 		user.setEmail(userDTO.getEmailId());
 		user.setCredentials(Collections.singletonList(credential));
 		user.setEnabled(true);
-
 		UsersResource instance = getInstance();
 		Response response = instance.create(user);
+		assignRoleToUser(userDTO.getUserName(), userDTO.getRole());
 		System.out.println(response);
+		userRepository.save(userDTO);
+	}
+
+	private void assignRoleToUser(String userName, String role) {
+		Keycloak keycloak = Keycloak.getInstance("http://localhost:8180/auth", "pi", "admin1", "admin1", "pi-app");
+		String userId = keycloak.realm("pi").users().search(userName).get(0).getId();
+		UserResource user = keycloak.realm("pi").users().get(userId);
+		List<RoleRepresentation> roleToAdd = new LinkedList<>();
+		roleToAdd.add(keycloak.realm("pi").roles().get(role).toRepresentation());
+		user.roles().realmLevel().add(roleToAdd);
 	}
 
 	public List<UserRepresentation> getUser(String userName) {
@@ -49,7 +62,7 @@ public class KeyCloakService {
 		CredentialRepresentation credential = Credentials.createPasswordCredentials(userDTO.getPassword());
 		UserRepresentation user = new UserRepresentation();
 		user.setUsername(userDTO.getUserName());
-		user.setFirstName(userDTO.getFirstname());
+		user.setFirstName(userDTO.getFirstName());
 		user.setLastName(userDTO.getLastName());
 		user.setEmail(userDTO.getEmailId());
 		user.setCredentials(Collections.singletonList(credential));
@@ -84,16 +97,4 @@ public class KeyCloakService {
 		return realmResource.users();
 	}
 
-	public void persistKeycloakUsers() {
-		List<UserRepresentation> users = getInstance().list();
-		for (UserRepresentation user : users) {
-			UserDTO userDTO = new UserDTO();
-			userDTO.setUserName(user.getUsername());
-			userDTO.setEmailId(user.getEmail());
-			userDTO.setFirstname(user.getFirstName());
-			userDTO.setLastName(user.getLastName());
-			userDTO.setPassword("keycloak");
-			userRepository.save(userDTO);
-		}
-	}
 }
