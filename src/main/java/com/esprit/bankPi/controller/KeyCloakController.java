@@ -64,7 +64,7 @@ public class KeyCloakController {
 	}
 
 	@PostMapping(path = "/addRole/{role}")
-	public String addRealmRole(@PathParam(value = "role") String role) {
+	public String addRealmRole(@PathVariable(value = "role") String role) {
 		service.addRealmRole(role);
 		return "Role Added Successfully.";
 	}
