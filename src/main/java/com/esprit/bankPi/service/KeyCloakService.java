@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.core.Response;
 
@@ -69,6 +70,7 @@ public class KeyCloakService {
 
 		UsersResource usersResource = getInstance();
 		usersResource.get(userId).update(user);
+		userRepository.save(userDTO);
 	}
 
 	public void deleteUser(String userId) {
@@ -95,6 +97,23 @@ public class KeyCloakService {
 //		RealmRepresentation realm = keycloak.realm("pi").toRepresentation();
 		RealmResource realmResource = keycloak.realm("pi");
 		return realmResource.users();
+	}
+
+	public List<String> getAllRoles() {
+		Keycloak keycloak = Keycloak.getInstance("http://localhost:8180/auth", "pi", "admin1", "admin1", "pi-app");
+		List<String> availableRoles = keycloak.realm("pi").roles().list().stream().map(role -> role.getName())
+				.collect(Collectors.toList());
+		return availableRoles;
+	}
+
+	public void addRealmRole(String new_role_name) {
+		Keycloak keycloak = Keycloak.getInstance("http://localhost:8180/auth", "pi", "admin1", "admin1", "pi-app");
+		if (!getAllRoles().contains(new_role_name)) {
+			RoleRepresentation roleRep = new RoleRepresentation();
+			roleRep.setName(new_role_name);
+			roleRep.setDescription("role_" + new_role_name);
+			keycloak.realm("pi").roles().create(roleRep);
+		}
 	}
 
 }

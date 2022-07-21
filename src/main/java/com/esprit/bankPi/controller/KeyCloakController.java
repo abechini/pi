@@ -2,9 +2,10 @@ package com.esprit.bankPi.controller;
 
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,12 +22,12 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "api/user")
+@RequestMapping(path = "/api/keycloakController")
 public class KeyCloakController {
 	@Autowired
 	KeyCloakService service;
 
-	@PostMapping
+	@PostMapping(value = "/addUser")
 	public String addUser(@RequestBody UserDTO userDTO) {
 		service.addUser(userDTO);
 		return "User Added Successfully.";
@@ -62,4 +63,14 @@ public class KeyCloakController {
 		return "Reset Password Link Send Successfully to Registered E-mail Id.";
 	}
 
+	@PostMapping(path = "/addRole/{role}")
+	public String addRealmRole(@PathParam(value = "role") String role) {
+		service.addRealmRole(role);
+		return "Role Added Successfully.";
+	}
+
+	@GetMapping(path = "/getAllRoles")
+	public List<String> getAllRoles() {
+		return service.getAllRoles();
+	}
 }
