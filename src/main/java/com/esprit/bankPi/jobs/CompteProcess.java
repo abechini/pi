@@ -15,5 +15,4 @@ public class CompteProcess implements ItemProcessor<Compte, Compte> {
 		log.info("Account solde after process:" + item.getSolde());
 		return item;
 	}
-
 }
