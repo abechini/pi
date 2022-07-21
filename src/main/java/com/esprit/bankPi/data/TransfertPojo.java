@@ -11,8 +11,15 @@ import lombok.Data;
 
 @Entity
 @Data
-public class TransfertPojo extends TransactionPojo{
-	
+public class TransfertPojo extends TransactionPojo {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	int id;
+
+	String sender;
+
+	String reciver;
+
 	public int getId() {
 		return id;
 	}
@@ -61,19 +68,11 @@ public class TransfertPojo extends TransactionPojo{
 		this.currency = currency;
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	int id;
-	
-	String sender;
-	
-	String reciver;
-	
 	String description;
-	
+
 	// rib
 	String npl;
+
+	CurrencyEnum currency;
 	
-	CurrencyEnum currency ;
- 
 }
