@@ -24,6 +24,7 @@ import com.esprit.bankPi.data.Client;
 import com.esprit.bankPi.data.Compte;
 import com.esprit.bankPi.ml.ClientInstance;
 import com.esprit.bankPi.repository.ClientRepository;
+import com.esprit.bankPi.resources.TransactionServiceImpl;
 
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Instance;
@@ -153,7 +154,7 @@ public class GestionBudgetController {
 		clientsJsonObject.put("attributes", getJsonAtt());
 		List<Client> clients = clientRepository.findAll();
 		for (Client client : clients) {
-			Map<YearMonth, Double> savings = TransactionController.getSavings(client);
+			Map<YearMonth, Double> savings = TransactionServiceImpl.getSavings(client);
 
 			for (YearMonth yearMonth : savings.keySet()) {
 				data.put(prepareClientInstance(client, yearMonth, savings.get(yearMonth)).toJsonObject());

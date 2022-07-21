@@ -115,6 +115,7 @@ com\esprit\bankPi\controller\TransfertController.class
 com\esprit\bankPi\chatBot\ChatMessage.class
 com\esprit\bankPi\enums\CreditRequestStatus.class
 com\esprit\bankPi\model\promotion\VirtualCardPromotions.class
+com\esprit\bankPi\enums\Currency.class
 com\esprit\bankPi\data\Complaint.class
 com\esprit\bankPi\repository\BankCarteRepository.class
 com\esprit\bankPi\exceptions\TransactionException.class

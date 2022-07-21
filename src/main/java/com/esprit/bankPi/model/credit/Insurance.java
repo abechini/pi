@@ -19,7 +19,7 @@ public class Insurance {
     private Date expiryDate;
     private CreditType type;
     private Double amount;
-    private String beneficiary;
+ 
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "insurance")
     @JsonIgnore
     private CreditRequest creditRequest;
@@ -65,14 +65,6 @@ public class Insurance {
 
     public void setAmount(Double amount) {
         this.amount = amount;
-    }
-
-    public String getBeneficiary() {
-        return beneficiary;
-    }
-
-    public void setBeneficiary(String beneficiary) {
-        this.beneficiary = beneficiary;
     }
 
     public CreditType getType() {

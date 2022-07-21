@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,11 +22,12 @@ public class DepositController {
 	@Autowired
 	IDepositService depositService;
 
-	@PostMapping(path = "/deposit", produces = "application/json")
+	@PostMapping(path = "/deposit/{amount}/{currency}/{rib}", produces = "application/json")
 	@ResponseBody
-	public DepositPojo makeDeposit(@RequestBody double amount, @RequestBody CurrencyEnum currency, @RequestBody long idCompte)
+	public DepositPojo makeDeposit(@PathVariable("amount") double amount,
+			@PathVariable("currency") CurrencyEnum currency, @PathVariable("rib") String rib)
 			throws TransactionException {
-		return depositService.deposit(amount, currency, idCompte);
+		return depositService.deposit(amount, currency, rib);
 	}
 
 	@GetMapping(path = "/getAllDeposit/{idCompte}", produces = "application/json")

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.esprit.bankPi.data.WithdrowPojo;
@@ -20,11 +19,11 @@ public class WithdrowController {
 	@Autowired
 	IWithdrowService withdrowService;
 
-	@PostMapping(path = "/withdraw", produces = "application/json")
+	@PostMapping(path = "/withdraw/{amount}/{rib}", produces = "application/json")
 	@ResponseBody
-	public WithdrowPojo makeWithdraw(@RequestBody double amount, @RequestBody long compteId)
+	public WithdrowPojo makeWithdraw(@PathVariable("amount") double amount, @PathVariable("rib") String rib)
 			throws TransactionException {
-		return withdrowService.makeWithdraw(compteId, amount);
+		return withdrowService.makeWithdraw(rib, amount);
 	}
 
 	@GetMapping(path = "/getAllWithdraw/{idCompte}", produces = "application/json")

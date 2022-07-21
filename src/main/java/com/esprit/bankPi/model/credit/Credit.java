@@ -24,22 +24,14 @@ public class Credit {
 	    private CreditStatus creditStatus;
 	    private Integer creditTerm;
 	    private Double creditAmount;
-	    private Boolean creditRepayment;
-	    private Double creditRepaymentAmount;
-	    private Double creditRepaymentInterest;
 	    private Double creditInterest;
 	    private Double creditFees;
 	    @DateTimeFormat(pattern = Patterns.DATE_FORMAT)
 	    private LocalDate releaseDate;
 	    private String agent;
 	    private CreditType type;
-	    private Double payedAmount;
-	    private Double remainingAmount;
-	    
-	    /*@OneToMany(mappedBy="credit")
-	    @OrderBy("paymentDueDate ASC ")
-	    private Set<Payment> payments;
-	    */
+	
+	   
 	    
 	    
 	    @OneToOne(fetch = FetchType.EAGER)
@@ -65,13 +57,7 @@ public class Credit {
 	        this.account = account;
 	    }
 
-	  /*  public Set<Payment> getPayments() {
-	        return payments;
-	    }
-
-	    public void setPayments(Set<Payment> payments) {
-	        this.payments = payments;
-	    }*/
+	
 
 	    public CreditRequest getCreditRequest() {
 	        return creditRequest;
@@ -115,29 +101,7 @@ public class Credit {
 	        this.creditAmount = creditAmount;
 	    }
 
-	    public Boolean getCreditRepayment() {
-	        return creditRepayment;
-	    }
-
-	    public void setCreditRepayment(Boolean creditRepayment) {
-	        this.creditRepayment = creditRepayment;
-	    }
-
-	    public Double getCreditRepaymentAmount() {
-	        return creditRepaymentAmount;
-	    }
-
-	    public void setCreditRepaymentAmount(Double creditRepaymentAmount) {
-	        this.creditRepaymentAmount = creditRepaymentAmount;
-	    }
-
-	    public Double getCreditRepaymentInterest() {
-	        return creditRepaymentInterest;
-	    }
-
-	    public void setCreditRepaymentInterest(Double creditRepaymentInterest) {
-	        this.creditRepaymentInterest = creditRepaymentInterest;
-	    }
+	  
 
 	    public Double getCreditInterest() {
 	        return creditInterest;
@@ -187,21 +151,7 @@ public class Credit {
 	        this.type = type;
 	    }
 
-	    public Double getPayedAmount() {
-	        return payedAmount;
-	    }
 
-	    public void setPayedAmount(Double payedAmount) {
-	        this.payedAmount = payedAmount;
-	    }
-
-	    public Double getRemainingAmount() {
-	        return remainingAmount;
-	    }
-
-	    public void setRemainingAmount(Double remainingAmount) {
-	        this.remainingAmount = remainingAmount;
-	    }
 	
 	
 }

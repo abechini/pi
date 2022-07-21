@@ -1,5 +1,6 @@
 package com.esprit.bankPi.data;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
@@ -20,8 +21,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 //JPA Annotations
 @Table(name = "data_Compte")
 @javax.persistence.Entity(name = "data_Compte")
-public class Compte {
+public class Compte implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private Long numeroCompte;
 	private String rib;
 	private Double solde;
@@ -35,7 +41,10 @@ public class Compte {
 	private List<Income> incomes;
 	@JsonIgnoreProperties("compteList")
 	private Client client;
-	
+	private boolean isActive;
+	private double negativeCeiling;
+	private double acountFees;
+
 	@Id
 //@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@javax.persistence.Column(name = "numeroCompte", unique = true, nullable = false, insertable = true, updatable = false)
@@ -131,5 +140,31 @@ public class Compte {
 
 	public void setClient(Client client) {
 		this.client = client;
+	}
+	
+	@javax.persistence.Column(name = "isActive", unique = false, nullable = true, insertable = true, updatable = true)
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	@javax.persistence.Column(name = "negativeCeiling", unique = false, nullable = true, insertable = true, updatable = true)
+	public double getNegativeCeiling() {
+		return negativeCeiling;
+	}
+
+	public void setNegativeCeiling(double negativeCeiling) {
+		this.negativeCeiling = negativeCeiling;
+	}
+	
+	@javax.persistence.Column(name = "accountFees", unique = false, nullable = true, insertable = true, updatable = true)
+	public double getAcountFees() {
+		return acountFees;
+	}
+
+	public void setAcountFees(double acountFees) {
+		this.acountFees = acountFees;
 	}
 }

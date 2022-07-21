@@ -43,26 +43,12 @@ public class CreditService {
 	            if (newCredit.getCreditAmount() != null) {
 	                oldCredit.setCreditAmount(newCredit.getCreditAmount());
 	            }
-	            if (newCredit.getCreditRepayment() != null) {
-	                oldCredit.setCreditRepayment(newCredit.getCreditRepayment());
-	            }
-	            if (newCredit.getCreditRepaymentAmount() != null) {
-	                oldCredit.setCreditRepaymentAmount(newCredit.getCreditRepaymentAmount());
-	            }
+
 	            if (newCredit.getCreditFees() != null) {
 	                oldCredit.setCreditFees(newCredit.getCreditFees());
 	            }
 	            if (newCredit.getCreditInterest() != null) {
 	                oldCredit.setCreditInterest(newCredit.getCreditInterest());
-	            }
-	            if (newCredit.getCreditRepaymentInterest() != null) {
-	                oldCredit.setCreditRepaymentInterest(newCredit.getCreditRepaymentInterest());
-	            }
-	            if (newCredit.getPayedAmount() != null) {
-	                oldCredit.setPayedAmount(newCredit.getPayedAmount());
-	            }
-	            if (newCredit.getRemainingAmount() != null) {
-	                oldCredit.setRemainingAmount(newCredit.getRemainingAmount());
 	            }
 	            if (newCredit.getReleaseDate() != null) {
 	                oldCredit.setReleaseDate(newCredit.getReleaseDate());

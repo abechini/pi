@@ -9,11 +9,11 @@ public class Agency {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
     private String name ;
-    private String firstName ;
     @OneToMany
     private List<Client> clientList ;
-    @OneToOne
-    Agent agent ;
+    @OneToMany
+    private List<Agent>  agent ;
+  
 
 
     public Long getId() {
@@ -30,14 +30,6 @@ public class Agency {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
     }
 
     public List<Client> getClientList() {
