@@ -37,9 +37,9 @@ public class KeyCloakController {
 		return user;
 	}
 
-	@PutMapping(path = "/update/{userId}")
-	public String updateUser(@PathVariable("userId") String userId, @RequestBody UserDTO userDTO) {
-		service.updateUser(userId, userDTO);
+	@PutMapping(path = "/update/{userName}")
+	public String updateUser(@PathVariable("userName") String userName, @RequestBody UserDTO userDTO) {
+		service.updateUser(userName, userDTO);
 		return "User Details Updated Successfully.";
 	}
 

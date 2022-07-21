@@ -59,18 +59,25 @@ public class KeyCloakService {
 
 	}
 
-	public void updateUser(String userId, UserDTO userDTO) {
+	public void updateUser(String userName, UserDTO userDTO) {
+		UsersResource usersResource = getInstance();
+		List<UserRepresentation> users = usersResource.search(userName, true);
+		UserRepresentation user = users.get(0);
 		CredentialRepresentation credential = Credentials.createPasswordCredentials(userDTO.getPassword());
-		UserRepresentation user = new UserRepresentation();
 		user.setUsername(userDTO.getUserName());
 		user.setFirstName(userDTO.getFirstName());
 		user.setLastName(userDTO.getLastName());
 		user.setEmail(userDTO.getEmailId());
 		user.setCredentials(Collections.singletonList(credential));
-
-		UsersResource usersResource = getInstance();
-		usersResource.get(userId).update(user);
-		userRepository.save(userDTO);
+		usersResource.get(user.getId()).update(user);
+		assignRoleToUser(userName, userDTO.getRole());
+		Iterable<UserDTO> peristedUsers = userRepository.findAll();
+		for (UserDTO persistedUser : peristedUsers) {
+			if (persistedUser.getFirstName().equals(userName)) {
+				userRepository.delete(persistedUser);
+				userRepository.save(userDTO);
+			}
+		}
 	}
 
 	public void deleteUser(String userId) {
