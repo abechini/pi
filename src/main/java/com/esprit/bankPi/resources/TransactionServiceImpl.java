@@ -25,9 +25,9 @@ import com.esprit.bankPi.util.ExcelHelper;
 public class TransactionServiceImpl implements ITransactionService {
 
 	@Autowired
-	static DepositRepository depositRepository;
+	DepositRepository depositRepository;
 	@Autowired
-	static WithdrowRepository withdrowRepository;
+	WithdrowRepository withdrowRepository;
 	@Autowired
 	TransfertRepository transfertRepository;
 
@@ -42,7 +42,7 @@ public class TransactionServiceImpl implements ITransactionService {
 
 	}
 
-	public static Map<YearMonth, Double> getSavings(Client client) {
+	public Map<YearMonth, Double> getSavings(Client client) {
 		Map<YearMonth, Double> savings = new HashMap<YearMonth, Double>();
 		Long idCompte = client.getCompteList().get(0).getNumeroCompte();
 
