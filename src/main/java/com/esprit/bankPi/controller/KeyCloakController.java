@@ -61,4 +61,10 @@ public class KeyCloakController {
 		service.sendResetPassword(userName);
 		return "Reset Password Link Send Successfully to Registered E-mail Id.";
 	}
+
+	@PostMapping(path = "/persistUsers")
+	public String persistUsers() {
+		service.persistKeycloakUsers();
+		return "keycloak users persisted";
+	}
 }

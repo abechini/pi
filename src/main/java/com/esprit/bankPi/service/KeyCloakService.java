@@ -4,18 +4,24 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.esprit.bankPi.data.UserDTO;
 import com.esprit.bankPi.keycloak.Credentials;
+import com.esprit.bankPi.repository.UserRepository;
 
 @Service
 public class KeyCloakService {
+	@Autowired
+	UserRepository userRepository;
 
 	public void addUser(UserDTO userDTO) {
 		CredentialRepresentation credential = Credentials.createPasswordCredentials(userDTO.getPassword());
@@ -28,7 +34,8 @@ public class KeyCloakService {
 		user.setEnabled(true);
 
 		UsersResource instance = getInstance();
-		instance.create(user);
+		Response response = instance.create(user);
+		System.out.println(response);
 	}
 
 	public List<UserRepresentation> getUser(String userName) {
@@ -75,5 +82,18 @@ public class KeyCloakService {
 //		RealmRepresentation realm = keycloak.realm("pi").toRepresentation();
 		RealmResource realmResource = keycloak.realm("pi");
 		return realmResource.users();
+	}
+
+	public void persistKeycloakUsers() {
+		List<UserRepresentation> users = getInstance().list();
+		for (UserRepresentation user : users) {
+			UserDTO userDTO = new UserDTO();
+			userDTO.setUserName(user.getUsername());
+			userDTO.setEmailId(user.getEmail());
+			userDTO.setFirstname(user.getFirstName());
+			userDTO.setLastName(user.getLastName());
+			userDTO.setPassword("keycloak");
+			userRepository.save(userDTO);
+		}
 	}
 }
