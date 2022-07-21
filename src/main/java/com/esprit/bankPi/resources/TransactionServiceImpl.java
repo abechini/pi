@@ -1,29 +1,37 @@
 package com.esprit.bankPi.resources;
 
+import java.io.ByteArrayInputStream;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.esprit.bankPi.data.Client;
 import com.esprit.bankPi.data.DepositPojo;
+import com.esprit.bankPi.data.TransactionPojo;
+import com.esprit.bankPi.data.TransfertPojo;
 import com.esprit.bankPi.data.WithdrowPojo;
 import com.esprit.bankPi.repository.DepositRepository;
+import com.esprit.bankPi.repository.TransfertRepository;
 import com.esprit.bankPi.repository.WithdrowRepository;
+import com.esprit.bankPi.util.ExcelHelper;
 
+@Service
 public class TransactionServiceImpl implements ITransactionService {
 
 	@Autowired
 	static DepositRepository depositRepository;
 	@Autowired
 	static WithdrowRepository withdrowRepository;
-  @Autowired
+	@Autowired
 	TransfertRepository transfertRepository;
-  
-  @Override
+
+	@Override
 	public ByteArrayInputStream exportExtrait(long idCompte) {
 		List<TransactionPojo> transactions = new ArrayList<>();
 		List<TransfertPojo> transferts = transfertRepository.findByCompte(idCompte);
@@ -90,5 +98,5 @@ public class TransactionServiceImpl implements ITransactionService {
 		}
 
 		return savings;
-}
+	}
 }

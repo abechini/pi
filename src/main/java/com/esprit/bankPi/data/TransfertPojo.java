@@ -7,10 +7,7 @@ import javax.persistence.Id;
 
 import com.esprit.bankPi.enums.CurrencyEnum;
 
-import lombok.Data;
-
 @Entity
-@Data
 public class TransfertPojo extends TransactionPojo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,6 +16,13 @@ public class TransfertPojo extends TransactionPojo {
 	String sender;
 
 	String reciver;
+
+	String description;
+
+	// rib
+	String npl;
+
+	CurrencyEnum currency;
 
 	public int getId() {
 		return id;
@@ -67,12 +71,4 @@ public class TransfertPojo extends TransactionPojo {
 	public void setCurrency(CurrencyEnum currency) {
 		this.currency = currency;
 	}
-
-	String description;
-
-	// rib
-	String npl;
-
-	CurrencyEnum currency;
-	
 }

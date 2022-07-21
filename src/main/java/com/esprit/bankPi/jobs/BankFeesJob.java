@@ -23,10 +23,7 @@ import org.springframework.stereotype.Component;
 import com.esprit.bankPi.data.Compte;
 import com.esprit.bankPi.repository.CompteRepository;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Component
-@Slf4j
 @EnableBatchProcessing
 public class BankFeesJob {
 	
@@ -61,7 +58,6 @@ public class BankFeesJob {
 	@Bean
 	@StepScope
 	private RepositoryItemWriter<Compte> iteamWriter() {
-		log.info("Start Writing");
 		return new RepositoryItemWriterBuilder<Compte>()
 				.repository(compteRepository)
 				.methodName("save")
@@ -72,7 +68,6 @@ public class BankFeesJob {
 	@StepScope
 	private RepositoryItemReader<Compte> getItemReader() {
         Map<String, Direction> sorts = new HashMap<>();
-		log.info("Start Reading");
         sorts.put("numeroCompte", Direction.ASC);
 		return new RepositoryItemReaderBuilder<Compte>()
 				.name("ItemReader")
@@ -85,7 +80,6 @@ public class BankFeesJob {
     @Bean
     @StepScope
 	private ItemProcessor<Compte, Compte> iteamProcessor() {
-		log.info("In the processor");
 		return new CompteProcess();
 	}
 
