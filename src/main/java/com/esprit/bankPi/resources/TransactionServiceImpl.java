@@ -20,10 +20,22 @@ public class TransactionServiceImpl implements ITransactionService {
 	static DepositRepository depositRepository;
 	@Autowired
 	static WithdrowRepository withdrowRepository;
+  @Autowired
+	TransfertRepository transfertRepository;
+  
+  @Override
+	public ByteArrayInputStream exportExtrait(long idCompte) {
+		List<TransactionPojo> transactions = new ArrayList<>();
+		List<TransfertPojo> transferts = transfertRepository.findByCompte(idCompte);
+		transactions.addAll(transferts);
+		List<DepositPojo> deposits = depositRepository.findByCompte(idCompte);
+		transactions.addAll(deposits);
+		return ExcelHelper.extrait(transactions);
+
+	}
 
 	public static Map<YearMonth, Double> getSavings(Client client) {
 		Map<YearMonth, Double> savings = new HashMap<YearMonth, Double>();
-//		YearMonth yearMonth = YearMonth.now();
 		Long idCompte = client.getCompteList().get(0).getNumeroCompte();
 
 		List<DepositPojo> listDeposit = depositRepository.findByCompte(idCompte);
@@ -78,6 +90,5 @@ public class TransactionServiceImpl implements ITransactionService {
 		}
 
 		return savings;
-	}
-
+}
 }

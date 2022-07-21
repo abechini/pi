@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.esprit.bankPi.data.Topic;
 import com.esprit.bankPi.resources.TopicService;
 
 @Controller
+@RequestMapping("/api/topics")
 public class TopicController {
 	@Autowired
 	private TopicService topicService;
@@ -79,5 +81,17 @@ public class TopicController {
 			return ResponseEntity.badRequest().body("Topic not found");
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(topic);
+	}
+
+	@PostMapping(value = "/increaseLikes/{id}")
+	public ResponseEntity increaseLikes(@PathVariable Long id) {
+		int nbrOfLikes = topicService.increaseLikes(id);
+		return ResponseEntity.status(HttpStatus.OK).body(nbrOfLikes);
+	}
+
+	@PostMapping(value = "/decreaseLikes/{id}")
+	public ResponseEntity decreaseLikes(@PathVariable Long id) {
+		int nbrOfLikes = topicService.decreaseLikes(id);
+		return ResponseEntity.status(HttpStatus.OK).body(nbrOfLikes);
 	}
 }

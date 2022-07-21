@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,42 +26,55 @@ public class Topic {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public List<Comment> getComments() {
 		return comments;
 	}
+
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
 	}
-	public List<Evaluation> getEvaluations() {
-		return evaluations;
-	}
-	public void setEvaluations(List<Evaluation> evaluations) {
-		this.evaluations = evaluations;
-	}
+
 	private String description;
-//	@JsonIgnore
+
+	public int getNbrOfLikes() {
+		return nbrOfLikes;
+	}
+
+	public void setNbrOfLikes(int nbrOfLikes) {
+		this.nbrOfLikes = nbrOfLikes;
+	}
+
+	// @JsonIgnore
 //	@ManyToOne
 //	private User user;
 	@OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
 	private List<Comment> comments;
-	@OneToMany(mappedBy = "topic")
-	private List<Evaluation> evaluations;
+	@Value("${some.key:0}")
+	private int nbrOfLikes;
+
 }
