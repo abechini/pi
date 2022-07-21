@@ -6,5 +6,4 @@ import org.springframework.beans.factory.annotation.Configurable;
 @Configurable
 @EnableBatchProcessing
 public class BatchConfiguration {
-
 }
