@@ -43,9 +43,9 @@ public class KeyCloakController {
 		return "User Details Updated Successfully.";
 	}
 
-	@DeleteMapping(path = "/{userId}")
-	public String deleteUser(@PathVariable("userId") String userId) {
-		service.deleteUser(userId);
+	@DeleteMapping(path = "/delete/{userName}")
+	public String deleteUser(@PathVariable("userName") String userName) {
+		service.deleteUser(userName);
 		return "User Deleted Successfully.";
 	}
 

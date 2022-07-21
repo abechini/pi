@@ -80,9 +80,17 @@ public class KeyCloakService {
 		}
 	}
 
-	public void deleteUser(String userId) {
+	public void deleteUser(String userName) {
 		UsersResource usersResource = getInstance();
-		usersResource.get(userId).remove();
+		List<UserRepresentation> users = usersResource.search(userName, true);
+		UserRepresentation user = users.get(0);
+		usersResource.get(user.getId()).remove();
+		Iterable<UserDTO> peristedUsers = userRepository.findAll();
+		for (UserDTO persistedUser : peristedUsers) {
+			if (persistedUser.getFirstName().equals(userName)) {
+				userRepository.delete(persistedUser);
+			}
+		}
 	}
 
 	public void sendVerificationLink(String userName) {
