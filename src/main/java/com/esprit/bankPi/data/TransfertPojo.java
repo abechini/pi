@@ -11,21 +11,69 @@ import lombok.Data;
 
 @Entity
 @Data
-public class TransfertPojo extends TransactionPojo{
-	
+public class TransfertPojo extends TransactionPojo {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	int id;
-	
+
 	String sender;
-	
+
 	String reciver;
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getSender() {
+		return sender;
+	}
+
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
+
+	public String getReciver() {
+		return reciver;
+	}
+
+	public void setReciver(String reciver) {
+		this.reciver = reciver;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getNpl() {
+		return npl;
+	}
+
+	public void setNpl(String npl) {
+		this.npl = npl;
+	}
+
+	public CurrencyEnum getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(CurrencyEnum currency) {
+		this.currency = currency;
+	}
+
 	String description;
-	
+
 	// rib
 	String npl;
+
+	CurrencyEnum currency;
 	
-	CurrencyEnum currency ;
- 
 }

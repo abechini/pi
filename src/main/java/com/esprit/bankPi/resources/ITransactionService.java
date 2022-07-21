@@ -1,5 +1,7 @@
 package com.esprit.bankPi.resources;
 
-public interface ITransactionService {
+import java.io.ByteArrayInputStream;
 
+public interface ITransactionService {
+	ByteArrayInputStream exportExtrait(long idCompte);
 }
