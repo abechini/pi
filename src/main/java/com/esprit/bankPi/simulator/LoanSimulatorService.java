@@ -46,32 +46,45 @@ public class LoanSimulatorService {
     public String calculateCreditMentuality(double loanAmount, double months) {
     	//intrestRate
     	double intrestRate= getTMM()+ (getTMM()*15/100 );
+    	 if (months > 36) {
+          String message = SystemMessages.CONSOMATION_LOAN_MAX_YEARS;
+         
+         return message;
+        
+         }else {
+    
         double t = intrestRate / 100;
         double t1 = (loanAmount * t) / 12;
         //mensualité formule mathématique = [(M*t)/12] / [1-(1+(t/12))^-n].
       double t2 = 1 - Math.pow(1 + t / 12, -months);
      
         return "  Monthly loan payment ="+(t1 / t2)+" DT" +"                  => TMM today = "+ getTMM()+"    Interest rate = "+ intrestRate;
-    }
+    }}
     
 //CAR
     public String calculateCarCreditMentuality(double loanAmount, double months) {
     	double intrestRate= getTMM()+ (getTMM()*15/100 );
+    	 double taux = 0;
         if (months < 36) {
             LOG.error("Car loan should be on 3 years or more");
        
          String message = SystemMessages.CAR_LOAN_MIN_YEARS;
         
         return message;
-           
+       
         } else if (months == 36) {
-            intrestRate = intrestRate + (intrestRate*20)/100;
+            double intrestRate1 = intrestRate + (intrestRate*20)/100;
+            taux=intrestRate1;
+          
         } else if (months <= 48 && months >= 37) {
-            intrestRate = intrestRate + (intrestRate*22)/100;
+            double intrestRate2 = intrestRate + (intrestRate*22)/100;
+            taux=intrestRate2;
         } else if (months <= 60 && months >= 49) {
-            intrestRate = intrestRate +0.27;
+            double intrestRate3 = intrestRate +(intrestRate*25)/100;
+            taux=intrestRate3;
         } else if (months <= 72 && months >= 61) {
-            intrestRate = intrestRate + (intrestRate*25)/100;
+            double intrestRate4 = intrestRate + (intrestRate*27)/100;
+            taux=intrestRate4;
         } else if (months > 72) {
             LOG.error("Car loan couldn't be on more than 6 years ");
      
@@ -80,14 +93,15 @@ public class LoanSimulatorService {
         return message;
         
         }
-        double t = intrestRate / 100;
+        double t = taux / 100;
         double t1 = loanAmount * t / 12;
         double t2 = 1 - Math.pow(1 + t / 12, -months);
-        return " Car Credit  Monthly payment="+(t1 / t2)+"  DT" +"                  => TMM today = "+ getTMM()+"    Interest rate = "+ intrestRate;
+        return " Car Credit  Monthly payment="+(t1 / t2)+"  DT" +"                  => TMM today = "+ getTMM()+"    Interest rate = "+ taux;
     }
 
     public String calculateHomeCreditMentuality(double loanAmount, double months) {
     	double intrestRate= getTMM()+ (getTMM()*15/100 );
+    	 double taux = 0;
         if ((months / 12) < 15) {
             LOG.error("Home loan should be on more than 15 years ");
             
@@ -96,9 +110,12 @@ public class LoanSimulatorService {
             return message;
           
         } else if ((months / 12) == 15) {
-            intrestRate = intrestRate + (intrestRate*25)/100;
+        	
+            double intrestRate1 = intrestRate + (intrestRate*24)/100;
+            taux=intrestRate1;
         } else if ((months / 12) <= 30 && (months / 12) > 15) {
-            intrestRate = intrestRate + (intrestRate*28)/100;
+            double intrestRate2 = intrestRate + (intrestRate*34)/100;
+            taux=intrestRate2;
            
         } else if ((months / 12) > 30) {
         	 LOG.error("Home loan couldn't be on more than 30 years");
@@ -113,7 +130,7 @@ public class LoanSimulatorService {
         double t1 = loanAmount * t / 12;
         double t2 = 1 - Math.pow(1 + t / 12, -months);
         
-        return "Home Credit Monthly payment="+(t1 / t2)+"  DT" +"                  => TMM today = "+ getTMM()+"    Interest rate = "+ intrestRate;
+        return "Home Credit Monthly payment="+(t1 / t2)+"  DT" +"                  => TMM today = "+ getTMM()+"    Interest rate = "+ taux;
     }
 
 }
