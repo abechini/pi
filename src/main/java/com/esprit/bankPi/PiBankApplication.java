@@ -29,7 +29,6 @@ import com.esprit.bankPi.repository.DepositRepository;
 import com.esprit.bankPi.repository.IncomeRepository;
 import com.esprit.bankPi.repository.TransfertRepository;
 import com.esprit.bankPi.resources.IDepositService;
-import com.esprit.bankPi.resources.ITransfertService;
 
 @SpringBootApplication
 public class PiBankApplication {
@@ -96,79 +95,84 @@ public class PiBankApplication {
 
 		SpringApplication.run(PiBankApplication.class, args);
 		
-		Compte compte = new Compte();
-
-
-		for (int i = 0; i < 200; i++) {
-			Client client = new Client();
-			Agency agency = new Agency();
-			Income income = new Income();
-			List<Income> listIncome = new ArrayList<Income>();
-			income.setIncomeType(IncomeType.SALARY);
-			income.setIncomeEndDate(YearMonth.of(2050, 12));
-			income.setIncomeAmount(Math.random() * 100);
-			List<Compte> list = new ArrayList<Compte>();
-			compte.setCurrency(CurrencyEnum.TND);
-			listIncome.add(income);
-			compte.setIncomes(listIncome);
-			// compte.setClient(client);
-			agency.setName("amen");
-			client.setAddress("tunis");
-			client.setSexe(Sexe.Male);
-			client.setAgency(agency);
-			list.add(compte);
-			client.setCompteList(list);
-			;
-			client.setCivilState(CivilState.Married);
-			client.setDateOfBirth(new Date());
-			client.setEmail("aziz@bechini.tn");
-			agencyRepository.save(agency);
-			client.setFirstName("aziz" + Math.random() * 100);
-			client.setName("bechini");
-			compte.setSolde((Double) Math.random() * 100);
-			compte.setType(CompteType.SAVING);
-			client.setCin(Math.random() + "");
+//		Compte compte = new Compte();
+//
+//
+//		for (int i = 0; i < 200; i++) {
+//			Client client = new Client();
+//			Agency agency = new Agency();
+//			Income income = new Income();
+//			List<Income> listIncome = new ArrayList<Income>();
+//			income.setIncomeType(IncomeType.SALARY);
+//			income.setIncomeEndDate(YearMonth.of(2050, 12));
+//			income.setIncomeAmount(Math.random() * 100);
+//			List<Compte> list = new ArrayList<Compte>();
+//			compte.setCurrency(CurrencyEnum.TND);
+//			listIncome.add(income);
+//			compte.setIncomes(listIncome);
+//			// compte.setClient(client);
+//			agency.setName("amen");
+//			client.setAddress("tunis");
+//			client.setSexe(Sexe.Male);
+//			client.setAgency(agency);
+//			list.add(compte);
+//			client.setCompteList(list);
+//			
+//			client.setCivilState(CivilState.Married);
+//			client.setDateOfBirth(new Date());
+//			client.setEmail("aziz@bechini.tn");
+//			agencyRepository.save(agency);
+//			client.setFirstName("aziz" + Math.random() * 100);
+//			client.setName("bechini");
+//			compte.setSolde((Double) Math.random() * 100);
+//			compte.setType(CompteType.SAVING);
+//			client.setCin(Math.random() + "");
+//			compte.setAcountFees(1.2d);
+//			compte.setActive(true);
+//			compte.setNegativeCeiling(10d);
+//			
+//			compte.setNumeroCompte(new Random().nextLong());
 			// incomeRepository.save(income);
 //			clientRepository.save(client);
 			// compteRepository.save(compte);
 		}
-		Compte c = new Compte();
-		c.setSolde(20d);
-		c.setCurrency(CurrencyEnum.TND);
-		c.setType(CompteType.DEPOSIT);
-		c.setNumeroCompte(2l);
-c.setActive(Boolean.TRUE);
-		compteRepository.save(c);
+//		Compte c = new Compte();
+//		c.setSolde(20d);
+//		c.setCurrency(CurrencyEnum.TND);
+//		c.setType(CompteType.DEPOSIT);
+//		c.setNumeroCompte(2l);
+//c.setActive(Boolean.TRUE);
+//		compteRepository.save(c);
 		
 
 
-		for (int i = 0; i < 5; i++) {
-
-			DepositPojo d = new DepositPojo();
-			d.setTransaction_date(new Date());
-			d.setCompte(c);
-			d.setAmount_in_number(i);
-			d.setCurrency(CurrencyEnum.TND);
-			
-			TransfertPojo t = new TransfertPojo();
-		     t.setTransaction_date(new Date());
-		     t.setAmount("30 euro");
-		     t.setAmount_in_number(30d);
-		     t.setCurrency(CurrencyEnum.EUR);
-		     t.setDescription("description");
-		     t.setReciver("bechini");
-		     t.setSender("yass");
-		     t.setNpl("TN25-1234-9999-2");
-		     t.setCompte(c);
-		     
-		     
-		     iTransfertService.save(t);
-
-//			depositService.deposit(i + 5, CurrencyEnum.TND, Integer.toString(i + 5));
-
-			depositRepository.save(d);
-
-		}
+//		for (int i = 0; i < 5; i++) {
+//
+//			DepositPojo d = new DepositPojo();
+//			d.setTransaction_date(new Date());
+//			d.setCompte(compte);
+//			d.setAmount_in_number(i);
+//			d.setCurrency(CurrencyEnum.TND);
+//			
+//			TransfertPojo t = new TransfertPojo();
+//		     t.setTransaction_date(new Date());
+//		     t.setAmount("30 euro");
+//		     t.setAmount_in_number(30d);
+//		     t.setCurrency(CurrencyEnum.EUR);
+//		     t.setDescription("description");
+//		     t.setReciver("bechini");
+//		     t.setSender("yass");
+//		     t.setNpl("TN25-1234-9999-2");
+//		     t.setCompte(compte);
+//		     
+//		     
+//		     iTransfertService.save(t);
+//
+////			depositService.deposit(i + 5, CurrencyEnum.TND, Integer.toString(i + 5));
+//
+//			depositRepository.save(d);
+//
+//		}
 
 //		for (int i = 0; i < 10; i++) {
 //			Client client = new Client();
@@ -196,6 +200,6 @@ c.setActive(Boolean.TRUE);
 //			clientRepository.save(client);
 //
 //		}
-	}
+//	}
 
 }

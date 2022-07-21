@@ -1,5 +1,6 @@
 package com.esprit.bankPi.data;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
@@ -20,8 +21,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 //JPA Annotations
 @Table(name = "data_Compte")
 @javax.persistence.Entity(name = "data_Compte")
-public class Compte {
+public class Compte implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private Long numeroCompte;
 	private String rib;
 	private Double solde;
@@ -37,6 +43,7 @@ public class Compte {
 	private Client client;
 	private boolean isActive;
 	private double negativeCeiling;
+	private double acountFees;
 
 	@Id
 //@GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -150,5 +157,14 @@ public class Compte {
 
 	public void setNegativeCeiling(double negativeCeiling) {
 		this.negativeCeiling = negativeCeiling;
+	}
+	
+	@javax.persistence.Column(name = "accountFees", unique = false, nullable = true, insertable = true, updatable = true)
+	public double getAcountFees() {
+		return acountFees;
+	}
+
+	public void setAcountFees(double acountFees) {
+		this.acountFees = acountFees;
 	}
 }
