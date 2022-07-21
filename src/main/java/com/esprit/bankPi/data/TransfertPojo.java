@@ -12,7 +12,6 @@ import lombok.Data;
 @Entity
 @Data
 public class TransfertPojo extends TransactionPojo {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	int id;

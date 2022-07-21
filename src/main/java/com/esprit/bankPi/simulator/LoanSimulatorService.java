@@ -7,31 +7,56 @@ import org.slf4j.LoggerFactory;
 
 import com.esprit.bankPi.util.SystemMessages;
 
-
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 
 
 @Service
-
-
-
-
 public class LoanSimulatorService {
     private static final Logger LOG = LoggerFactory.getLogger(LoanSimulatorService.class);
- 
-  //mensualité formule mathématique = [(M*t)/12] / [1-(1+(t/12))^-n].
-    public String calculateCreditMentuality(double loanAmount, double intrestRate, double months) {
+
+	public Double getTMM(){
+		
+	  Document doc = null;
+	try {
+		doc = Jsoup.connect("https://www.bct.gov.tn/bct/siteprod/tableau_statistique_a.jsp?params=PL203105&la=AR").get();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	    Elements tableRows = doc.select(".bct-table-fixed table tr");
+	    Double lastValue = 0d;
+	    for (Element tableRow : tableRows) {
+	        String rowData = tableRow.text();
+	        if (rowData.split(" ").length == 7){
+	            lastValue = Double.parseDouble(rowData.split(" ")[6]);
+	        }
+	    }
+	    return lastValue;
+		
+	}
+
+
+    public String calculateCreditMentuality(double loanAmount, double months) {
+    	//intrestRate
+    	double intrestRate= getTMM()+ (getTMM()*15/100 );
         double t = intrestRate / 100;
         double t1 = (loanAmount * t) / 12;
-  //[1-(1+(t/12))^-n]
+        //mensualité formule mathématique = [(M*t)/12] / [1-(1+(t/12))^-n].
       double t2 = 1 - Math.pow(1 + t / 12, -months);
      
-        return "  Monthly loan payment ="+(t1 / t2)+" DT" ;
+        return "  Monthly loan payment ="+(t1 / t2)+" DT" +"                  => TMM today = "+ getTMM()+"    Interest rate = "+ intrestRate;
     }
     
 //CAR
     public String calculateCarCreditMentuality(double loanAmount, double months) {
-        double intrestRate = 0;
+    	double intrestRate= getTMM()+ (getTMM()*15/100 );
         if (months < 36) {
             LOG.error("Car loan should be on 3 years or more");
        
@@ -40,13 +65,13 @@ public class LoanSimulatorService {
         return message;
            
         } else if (months == 36) {
-            intrestRate = 4.21;
+            intrestRate = intrestRate + (intrestRate*20)/100;
         } else if (months <= 48 && months >= 37) {
-            intrestRate = 4.31;
+            intrestRate = intrestRate + (intrestRate*22)/100;
         } else if (months <= 60 && months >= 49) {
-            intrestRate = 4.37;
+            intrestRate = intrestRate +0.27;
         } else if (months <= 72 && months >= 61) {
-            intrestRate = 4.45;
+            intrestRate = intrestRate + (intrestRate*25)/100;
         } else if (months > 72) {
             LOG.error("Car loan couldn't be on more than 6 years ");
      
@@ -58,11 +83,11 @@ public class LoanSimulatorService {
         double t = intrestRate / 100;
         double t1 = loanAmount * t / 12;
         double t2 = 1 - Math.pow(1 + t / 12, -months);
-        return " Car Credit  Monthly payment="+(t1 / t2)+"  DT";
+        return " Car Credit  Monthly payment="+(t1 / t2)+"  DT" +"                  => TMM today = "+ getTMM()+"    Interest rate = "+ intrestRate;
     }
 
     public String calculateHomeCreditMentuality(double loanAmount, double months) {
-        double intrestRate = 0;
+    	double intrestRate= getTMM()+ (getTMM()*15/100 );
         if ((months / 12) < 15) {
             LOG.error("Home loan should be on more than 15 years ");
             
@@ -71,9 +96,9 @@ public class LoanSimulatorService {
             return message;
           
         } else if ((months / 12) == 15) {
-            intrestRate = 2.5;
+            intrestRate = intrestRate + (intrestRate*25)/100;
         } else if ((months / 12) <= 30 && (months / 12) > 15) {
-            intrestRate = 3.2;
+            intrestRate = intrestRate + (intrestRate*28)/100;
            
         } else if ((months / 12) > 30) {
         	 LOG.error("Home loan couldn't be on more than 30 years");
@@ -88,7 +113,7 @@ public class LoanSimulatorService {
         double t1 = loanAmount * t / 12;
         double t2 = 1 - Math.pow(1 + t / 12, -months);
         
-        return "Home Credit Monthly payment="+(t1 / t2)+"  DT";
+        return "Home Credit Monthly payment="+(t1 / t2)+"  DT" +"                  => TMM today = "+ getTMM()+"    Interest rate = "+ intrestRate;
     }
 
 }

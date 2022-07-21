@@ -62,7 +62,7 @@ public class CreditRequestController {
 	    @PutMapping(value = "/{id}/suggest", produces = MediaType.APPLICATION_JSON_VALUE)
 	    @ResponseStatus(HttpStatus.OK)
 	    public ResponseEntity<CreditRequest> rejectCreditRequest(@PathVariable(value = "id") Integer id) throws Exception {
-	        return new ResponseEntity<>(creditRequestService.rejectCreditRequest(id), HttpStatus.OK);
+	        return new ResponseEntity<>(creditRequestService.suggestrejectCreditRequest(id), HttpStatus.OK);
 	    }
 	    
 	    
@@ -86,12 +86,6 @@ public class CreditRequestController {
 	    public ResponseEntity<Set<CreditRequest>> getAllCreditRequestAcceptedFromClients() throws Exception {
 	        return new ResponseEntity<>(creditRequestService.getAllCreditRequestAcceptedFromClients(), HttpStatus.OK);
 	    }
-	    
-	  //getAllCreditRequestAcceptedFromClients()
-	    @GetMapping(value = "/client-rejected", produces = MediaType.APPLICATION_JSON_VALUE)
-	    @ResponseStatus(HttpStatus.CREATED)
-	    public ResponseEntity<Set<CreditRequest>> getAllCreditRequestRejecteFromClients() throws Exception {
-	        return new ResponseEntity<>(creditRequestService.getAllCreditRequestRejecredFromClients(), HttpStatus.OK);
-	    }
+	
 	  
 }

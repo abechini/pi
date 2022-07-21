@@ -30,13 +30,8 @@ public class Credit {
 	    private LocalDate releaseDate;
 	    private String agent;
 	    private CreditType type;
-	    private Double payedAmount;
-	    private Double remainingAmount;
-	    
-	    /*@OneToMany(mappedBy="credit")
-	    @OrderBy("paymentDueDate ASC ")
-	    private Set<Payment> payments;
-	    */
+	
+	   
 	    
 	    
 	    @OneToOne(fetch = FetchType.EAGER)
@@ -62,13 +57,7 @@ public class Credit {
 	        this.account = account;
 	    }
 
-	  /*  public Set<Payment> getPayments() {
-	        return payments;
-	    }
-
-	    public void setPayments(Set<Payment> payments) {
-	        this.payments = payments;
-	    }*/
+	
 
 	    public CreditRequest getCreditRequest() {
 	        return creditRequest;
@@ -162,21 +151,7 @@ public class Credit {
 	        this.type = type;
 	    }
 
-	    public Double getPayedAmount() {
-	        return payedAmount;
-	    }
 
-	    public void setPayedAmount(Double payedAmount) {
-	        this.payedAmount = payedAmount;
-	    }
-
-	    public Double getRemainingAmount() {
-	        return remainingAmount;
-	    }
-
-	    public void setRemainingAmount(Double remainingAmount) {
-	        this.remainingAmount = remainingAmount;
-	    }
 	
 	
 }
