@@ -14,10 +14,10 @@ public class LoanSimulatorController {
 	 @Autowired
 	 LoanSimulatorService loanSimulatorService;
 
-	     @PostMapping(value = "/simpleSimulator")
+	     @PostMapping(value = "/consomationSimulator")
 	     @ResponseBody
-	     public String simpleLoan(@RequestParam double loanAmount, double intrestRate, double months) {
-	         return loanSimulatorService.calculateCreditMentuality(loanAmount, intrestRate, months);
+	     public String simpleLoan(@RequestParam double loanAmount, double months) {
+	         return loanSimulatorService.calculateCreditMentuality(loanAmount, months);
 
 	     }
 

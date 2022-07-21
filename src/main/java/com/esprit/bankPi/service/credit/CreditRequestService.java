@@ -92,9 +92,14 @@ public class CreditRequestService {
 	            if (newCreditRequest.getAge() != null) {
 	                oldCreditRequest.setAge(newCreditRequest.getAge());
 	            }
-	            if (newCreditRequest.getCreditRequestStatus() != null) {
-	                oldCreditRequest.setCreditRequestStatus(newCreditRequest.getCreditRequestStatus());
+	            if (newCreditRequest.getCreditType() != null) {
+	                oldCreditRequest.setCreditType(newCreditRequest.getCreditType());
 	            }
+	            
+	            if (newCreditRequest.getNetSalary() != null) {
+	                oldCreditRequest.setNetSalary(newCreditRequest.getNetSalary());
+	            }
+	            
 	            creditRequestRepository.save(oldCreditRequest);
 	            return "Credit Request Updated Successfully";
 	        } else {
@@ -111,8 +116,8 @@ public class CreditRequestService {
 	    	
 	    }
 
-	    //reject credit
-	    public CreditRequest rejectCreditRequest(Integer id) throws Exception {
+	    //suggest reject credit
+	    public CreditRequest suggestrejectCreditRequest(Integer id) throws Exception {
 	        if (creditRequestRepository.findById(id.longValue()).isPresent()) {
 	            CreditRequest creditRequest = creditRequestRepository.findById(id.longValue()).get();
 	            if (creditRequest.getCreditRequestStatus().toString().equals(CreditRequestStatus.REJECTED.toString())) {
@@ -198,8 +203,6 @@ public Credit createCreditFromCreditRequest(Integer id) throws Exception {
 	        credit.setCreditStatus(CreditStatus.CREATED);
 	        credit.setCreditAmount(creditRequest.getCreditAmount());
 	        credit.setCreditTerm(creditRequest.getCreditTerm());
-	    
-	        //credit.setType(creditRequest.getType());
 	        credit.setType(creditRequest.getCreditType());
 	        credit.setCreationDate(LocalDate.now());
 	        credit.setCreditInterest(Constants.CREDIT_INTEREST);
@@ -301,10 +304,6 @@ public Credit createCreditFromCreditRequest(Integer id) throws Exception {
 	        return creditRequestRepository.findAllCreditRequestWithStatus(CreditRequestStatus.ACCEPTED);
 	    }
 	    
-	    //rejected
-public Set<CreditRequest> getAllCreditRequestRejecredFromClients(){
-	    	
-	        return creditRequestRepository.findAllCreditRequestWithStatus(CreditRequestStatus.REJECTED);
-	    }
+
 
 }
