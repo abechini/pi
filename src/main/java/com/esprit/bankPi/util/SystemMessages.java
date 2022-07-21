@@ -16,6 +16,7 @@ public class SystemMessages {
 	public static final String CAR_LOAN_MAX_YEARS = "CAR LOAN COULDN'T BE ON MORE THAN 6 YEARS";
 	public static final String HOME_LOAN_MIN_YEARS = "HOME LOAN SHOULD BE ON MORE THAN 15 YEARS";
 	public static final String HOME_LOAN_MAX_YEARS = "HOME LOAN COULDN't BE ON MORE THAN 30 YEARS";
+	public static final String CONSOMATION_LOAN_MAX_YEARS = "CAR LOAN COULDN'TBE ON MORE THAN 3 YEARS";
 
     
 }
