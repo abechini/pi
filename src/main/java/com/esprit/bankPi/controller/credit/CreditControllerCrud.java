@@ -1,4 +1,5 @@
 package com.esprit.bankPi.controller.credit;
+import com.esprit.bankPi.jobs.CreditFeesJob;
 import com.esprit.bankPi.model.credit.Credit;
 import com.esprit.bankPi.service.credit.CreditService;
 
@@ -17,6 +18,9 @@ public class CreditControllerCrud {
 
 	@Autowired
     CreditService creditService;
+	
+	@Autowired
+	CreditFeesJob creditFeesJob;
 
     //deleteCredit
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,7 +43,12 @@ public class CreditControllerCrud {
         return new ResponseEntity<>(creditService.getCredit(id), HttpStatus.OK);
     }
    
-
+    //getCredit
+    @GetMapping(value = "/executeJob", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void executeJob() throws Exception {
+    	creditFeesJob.creditJobRunner();
+    }
 
 
 	
