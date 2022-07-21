@@ -28,5 +28,10 @@ public class TransactionUtil {
 	public static boolean hasSuffisantSolde(double amount, double solde, double negativeCeiling) {
 		return solde - amount + negativeCeiling >= 0;
 	}
+	
+	public static Compte distractBankFees(Compte c) {
+		c.setSolde(c.getSolde() - c.getAcountFees());
+		return c;
+	}
 
 }

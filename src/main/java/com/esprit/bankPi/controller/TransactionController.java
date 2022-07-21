@@ -1,5 +1,14 @@
 package com.esprit.bankPi.controller;
 
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameter;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,23 +24,23 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @RestController
 @RequestMapping("/transactionController")
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionController {
-	
+
 	@Autowired
 	TransactionServiceImpl transactionServiceImpl;
 
 	@Autowired
 	BankFeesJob bankFeesJob;
-	
+
 	@GetMapping(path = "/executeJob", produces = "application/json")
 	@ResponseBody
-	public void getAllDeposit() {
+	public void lunchDistractBankFeesJob() {
 		try {
-		 bankFeesJob.myfirstJob();
-	    } catch(Exception e) {
-	    		System.out.println(e);
-	    }
+			bankFeesJob.jobRunner();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 
 	@GetMapping(value = "/exportExcel/{idCompte}")
@@ -39,5 +48,6 @@ public class TransactionController {
 		transactionServiceImpl.exportExtrait(idCompte);
 		return ResponseEntity.status(HttpStatus.OK).body("transactions exported successfully");
 	}
+
 
 }
