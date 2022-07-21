@@ -34,24 +34,26 @@
             }).then(function(res) {
                 return botui.message.bot({
                     content: 'What do you want to search? (Begin with \'search\')' + '<br /><br />' +
-                        'Please follow the searching rules below:<br />' +
-                        '- Query by particular year:<br /> Ex. search login error in 2020<br />' +
-                        '- Query by year range:<br /> Ex. search login error  from 2018 to 2020<br />'
+                    'What do you want to claim? (Begin with \'claim\')' + '<br /><br />' +
+                        'Please follow the  rules below:<br />' +
+                        '- To claim : Ex. claim  transaction issues <br />' +
+                        '- To search  by particular year: Ex. search login error in 2020<br />' +
+                        '- To search  by year range: Ex. search login error  from 2018 to 2020<br />'
                 })
             })
                 .then(function(res) {
                 return botui.action.text({
                     action: {
                         size: 50,
-                        placeholder: 'Ex. search login error in 2019'
+                        placeholder: 'Ex. search loginErros in 2019  Or Claim transation errors'
                     }
                 });
             })
                 .then(function(res) {
                 searchContent = res.value.toLowerCase();
-                if (searchContent.search("search") == -1) {
+                if (searchContent.search("search") == -1&& searchContent.search("claim")==-1) {
                     botui.message.bot({
-                        content: 'You must type \'search\' in the beginning of your query. Please try again.'
+                        content: 'You must type \'search\' or  \'claim\' in the beginning of your query. Please try again.'
                     }).then(init);
                 }
                 else {
