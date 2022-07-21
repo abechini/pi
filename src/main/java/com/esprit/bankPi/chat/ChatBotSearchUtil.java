@@ -3,13 +3,8 @@ package com.esprit.bankPi.chat;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
-
 import com.esprit.bankPi.model.Reclamation;
 import com.esprit.bankPi.repository.ReclamationRepository;
-
-
 import java.sql.*;
 import java.util.*;
 
@@ -39,9 +34,7 @@ public class ChatBotSearchUtil {
 
 	    public static double startTime = 0;
 
-	    public static ArrayList<Integer> xCount;
 
-	    public static ArrayList<Double>  yMySQLRunTime;
 
 
 	    static Connection connection = null;
@@ -69,11 +62,7 @@ public class ChatBotSearchUtil {
 	        historyResultMap = new HashMap<>();
 	        entrySet = historyResultMap.entrySet();
 
-	        /*
-	            Initialize xCount, yTimeSeries for plotting graphs with x-axis and y-axis
-	         */
-	        xCount = new ArrayList<>();
-	        yMySQLRunTime = new ArrayList<>();
+
 	    }
 
 	    static {
@@ -112,52 +101,6 @@ public class ChatBotSearchUtil {
 
 
 
-//	    /**
-//	
-//	     *
-//	     * @param fileType
-//	     * @throws SQLException
-//	     */
-//
-//	    /**
-//	     * Parse XML and insert ArticleTitle and PubDate into MySQL
-//	     *
-//	     * @param fileType
-//	     * @throws SQLException
-//	     */
-//	    public static void MySQLParseXML(String fileType) throws SQLException {
-//	        String tableName = tableNameMap.get(fileType);
-//	        String fileName = fileNameMap.get(fileType);
-//	        String curFilePath = "src/main/resources/data-xml/" + fileName;
-//	        PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + "(" + "  Title, solution, date)" + "VALUES(?, ?, ?)");
-//	        try {
-//	            // xml parse
-//	            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//	            DocumentBuilder builder = factory.newDocumentBuilder();
-//	            org.w3c.dom.Document document = builder.parse(new File(curFilePath));
-//	            document.getDocumentElement().normalize();
-//	            NodeList nodeList = document.getElementsByTagName("PubmedArticle");
-//	            // iterate node list
-//	            for (int i = 0; i < nodeList.getLength(); i++) {
-//	                Node node = nodeList.item(i);
-//	                if (node.getNodeType() == Node.ELEMENT_NODE) {
-//	                    Element element = (Element) node;
-//	                    List<String> cols = Arrays.asList(element.getElementsByTagName("ArticleTitle").item(0).getTextContent(),
-//	                            element.getElementsByTagName("PubDate").item(0).getTextContent());
-//	                    for (int paramIndex = 0; paramIndex < cols.size(); paramIndex++) {
-//	                        statement.setString(paramIndex + 1, cols.get(paramIndex));
-//	                    }
-//	                    statement.execute();
-//	                }
-//	            }
-//	        } catch (ParserConfigurationException e) {
-//	            e.printStackTrace();
-//	        } catch (SAXException e) {
-//	            e.printStackTrace();
-//	        } catch (IOException e) {
-//	            e.printStackTrace();
-//	        }
-//	    }
 
 	    /*
 	        Do Query by MySQL
@@ -173,7 +116,6 @@ public class ChatBotSearchUtil {
 	     */
 	    public static String doQueryMySQL(String fileType, String searchContent,ReclamationRepository repo) throws SQLException {
 	        String res = "";
-	        System.out.println(searchContent);
 	        // Here it needs to de construct the searchContent
 	        List<String> words = Arrays.asList(searchContent.toLowerCase().split("\\s+"));
 	        String searchWord = words.get(words.indexOf("search") + 1);
@@ -188,9 +130,7 @@ public class ChatBotSearchUtil {
 	        		return "merci de ne pas utilisé ce type des mots dans l'application";
 	        	
 	        }
-	        
-	      
-	        // Reclamtion automatique with claim    word
+	        // Reclamtion automatique with claim word
 	        if ( searchContent.startsWith("claim")) {
 	        	List<String> wordsclaim = Arrays.asList(searchContent.toLowerCase().split("\\s+"));
 	        	
@@ -206,6 +146,7 @@ public class ChatBotSearchUtil {
 	        	Reclamation reclamation= new Reclamation();
 	        	reclamation.setName(claim);
 	        	reclamation.setDate(""+year);
+	        	reclamation.setSolution("this reclamation don't have any solution yet");
 	        	repo.save(reclamation);
 
 	        	return "You Reclamation is Created with sucess with name :"+ claim;
@@ -213,6 +154,8 @@ public class ChatBotSearchUtil {
 	        	
 	        	
 	        }
+	        
+	        //search query 1 by year
 	        Statement statement = connection.createStatement();
 	        System.out.println(Arrays.asList(words));
 	        if (words.contains("in")) {
