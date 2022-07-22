@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -43,7 +44,7 @@ public class Compte implements Serializable {
 	private Client client;
 	private boolean isActive;
 	private double negativeCeiling;
-	private double acountFees;
+	private double acountFees=0d;
 
 	@Id
 //@GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -53,8 +54,7 @@ public class Compte implements Serializable {
 			return numeroCompte;
 		}else {
 			Random value = new Random();
-			String id=String.format("%04d", value.nextInt(100000));
-			this.numeroCompte= Long.valueOf(id);
+			this.numeroCompte= Long.valueOf((long) (100000+ Math.random() * 10000000));
 		}
 		return numeroCompte;
 	}

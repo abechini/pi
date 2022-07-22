@@ -36,7 +36,7 @@ public class Client {
     List<Appoitement> appoitementList ;
     @OneToMany
     List<Complaint>  complaintList;
-    @JsonIgnoreProperties("client")
+    @JsonIgnoreProperties({"client","acountFees"})
     @OneToMany(cascade = CascadeType.ALL)
     List<Compte>  compteList = new ArrayList<Compte>();
     @ManyToOne

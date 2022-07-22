@@ -95,47 +95,48 @@ public class PiBankApplication {
 
 		SpringApplication.run(PiBankApplication.class, args);
 		
-//		Compte compte = new Compte();
-//
-//
-//		for (int i = 0; i < 200; i++) {
-//			Client client = new Client();
-//			Agency agency = new Agency();
-//			Income income = new Income();
-//			List<Income> listIncome = new ArrayList<Income>();
-//			income.setIncomeType(IncomeType.SALARY);
-//			income.setIncomeEndDate(YearMonth.of(2050, 12));
-//			income.setIncomeAmount(Math.random() * 100);
-//			List<Compte> list = new ArrayList<Compte>();
-//			compte.setCurrency(CurrencyEnum.TND);
-//			listIncome.add(income);
-//			compte.setIncomes(listIncome);
-//			// compte.setClient(client);
-//			agency.setName("amen");
-//			client.setAddress("tunis");
-//			client.setSexe(Sexe.Male);
-//			client.setAgency(agency);
-//			list.add(compte);
-//			client.setCompteList(list);
-//			
-//			client.setCivilState(CivilState.Married);
-//			client.setDateOfBirth(new Date());
-//			client.setEmail("aziz@bechini.tn");
-//			agencyRepository.save(agency);
-//			client.setFirstName("aziz" + Math.random() * 100);
-//			client.setName("bechini");
-//			compte.setSolde((Double) Math.random() * 100);
-//			compte.setType(CompteType.SAVING);
-//			client.setCin(Math.random() + "");
-//			compte.setAcountFees(1.2d);
-//			compte.setActive(true);
-//			compte.setNegativeCeiling(10d);
-//			
-//			compte.setNumeroCompte(new Random().nextLong());
-			// incomeRepository.save(income);
-//			clientRepository.save(client);
-			// compteRepository.save(compte);
+		
+
+
+		for (int i = 0; i < 200; i++) {
+			Compte compte = new Compte();
+			Client client = new Client();
+			Agency agency = new Agency();
+			Income income = new Income();
+			List<Income> listIncome = new ArrayList<Income>();
+			income.setIncomeType(IncomeType.SALARY);
+			income.setIncomeEndDate(YearMonth.of(2050, 12));
+			income.setIncomeAmount(Math.random() * 100);
+			List<Compte> list = new ArrayList<Compte>();
+			compte.setCurrency(CurrencyEnum.TND);
+			listIncome.add(income);
+			compte.setIncomes(listIncome);
+			// compte.setClient(client);
+			agency.setName("amen");
+			client.setAddress("tunis");
+			client.setSexe(Sexe.Male);
+			client.setAgency(agency);
+			list.add(compte);
+			client.setCompteList(list);
+			
+			client.setCivilState(CivilState.Married);
+			client.setDateOfBirth(new Date());
+			client.setEmail("aziz@bechini.tn");
+			agencyRepository.save(agency);
+			client.setFirstName("aziz" + Math.random() * 100);
+			client.setName("bechini");
+			compte.setSolde((Double) Math.random() * 100);
+			compte.setType(CompteType.SAVING);
+			client.setCin(Math.random() + "");
+			compte.setAcountFees(1.2d);
+			compte.setActive(true);
+			compte.setNegativeCeiling(10d);
+			compte.setNumeroCompte(new Random().nextLong());
+			 //incomeRepository.save(income);
+			clientRepository.save(client);
+			 //compteRepository.save(compte);
 		}
+	}
 //		Compte c = new Compte();
 //		c.setSolde(20d);
 //		c.setCurrency(CurrencyEnum.TND);

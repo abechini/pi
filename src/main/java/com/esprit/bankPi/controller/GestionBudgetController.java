@@ -26,12 +26,14 @@ import com.esprit.bankPi.ml.ClientInstance;
 import com.esprit.bankPi.repository.ClientRepository;
 import com.esprit.bankPi.resources.TransactionServiceImpl;
 
+import lombok.extern.slf4j.Slf4j;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.JSONLoader;
 
 @Controller(value = "gestionBudgetController")
+@Slf4j
 public class GestionBudgetController {
 	@Autowired
 	ClientRepository clientRepository;
@@ -94,7 +96,7 @@ public class GestionBudgetController {
 				instance = instances.get(instances.numInstances() - 1);
 				savingprediction = linear.classifyInstance(instance);
 
-				System.out.println(
+				log.info(
 						"Date to predicate : " + YearMonth.from(convertToLocalDateViaInstant(targetDate.getTime()))
 								+ " current balance : " + cureentSolde + " saving prediction : "
 								+ getReelSavingMoney(
@@ -104,11 +106,8 @@ public class GestionBudgetController {
 						IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
 
 				targetDate.add(Calendar.MONTH, 1);
-
-				cureentSolde = (Double) (cureentSolde + getReelSavingMoney(cureentSolde, savingprediction));
-
 				if (targetDate.getTime().getYear() > (Calendar.getInstance().getTime().getYear() + 50)) {
-					System.out.println("limit reached");
+					log.info("limit reached");
 					break;
 				}
 			}
