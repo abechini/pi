@@ -23,7 +23,10 @@ import org.springframework.stereotype.Controller;
 import com.esprit.bankPi.data.Client;
 import com.esprit.bankPi.data.Compte;
 import com.esprit.bankPi.ml.ClientInstance;
+import com.esprit.bankPi.notification.MailUtility;
+import com.esprit.bankPi.notification.MessageUtility;
 import com.esprit.bankPi.repository.ClientRepository;
+import com.esprit.bankPi.resources.IClientService;
 import com.esprit.bankPi.resources.TransactionServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +39,7 @@ import weka.core.converters.JSONLoader;
 @Slf4j
 public class GestionBudgetController {
 	@Autowired
-	ClientRepository clientRepository;
+	IClientService clientService;
 
 	@Autowired
 	TransactionServiceImpl transactionServiceImpl;
@@ -46,19 +49,23 @@ public class GestionBudgetController {
 	// {mois,sexe,ageRange,civilState,depense}
 	public YearMonth getWhenReachTarget(Long idUser, Float target, Long numeroCompte) throws Exception {
 		// get rest money to reach
-		Client client = clientRepository.getById(idUser);
-		Compte compte = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte()))
-				.findFirst().get();
+		Client client = clientService.findById(idUser);
+		Compte compte = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte())).findFirst().orElse(null);
+		if(compte==null) {
+			System.out.println("the client with id : "+idUser+"does not have account with id : " + numeroCompte);
+			return null;
+		}
 		Double cureentSolde = compte.getSolde();
 		Double toReachGap = target - cureentSolde;
-
+		Map<YearMonth, Double> toFollow = new HashMap<YearMonth, Double>();
+		Calendar targetDate = Calendar.getInstance();
+		toFollow.put(calenderToYearMonth(targetDate), cureentSolde);
 		if (toReachGap > 0) {
 			Instance instance = null;
 			InputStream is = null;
 			JSONLoader loader = new JSONLoader();
 			LinearRegression linear = new LinearRegression();
 			JSONObject data = prepareData();
-			Calendar targetDate = Calendar.getInstance();
 
 			// set instance to predict
 			ClientInstance clientInstance = prepareClientInstance(client, null, null);
@@ -77,6 +84,7 @@ public class GestionBudgetController {
 			cureentSolde = (Double) (cureentSolde + getReelSavingMoney(
 					IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
 			targetDate.add(Calendar.MONTH, 1);
+			toFollow.put(calenderToYearMonth(targetDate), cureentSolde);
 			while (cureentSolde < target) {
 				// change the old depense with the predicted value
 				clientInstance.setSavings(savingprediction);
@@ -96,7 +104,7 @@ public class GestionBudgetController {
 				instance = instances.get(instances.numInstances() - 1);
 				savingprediction = linear.classifyInstance(instance);
 
-				log.info(
+				System.out.println(
 						"Date to predicate : " + YearMonth.from(convertToLocalDateViaInstant(targetDate.getTime()))
 								+ " current balance : " + cureentSolde + " saving prediction : "
 								+ getReelSavingMoney(
@@ -106,11 +114,14 @@ public class GestionBudgetController {
 						IncomeController.getTotalIncome(compte, calenderToYearMonth(targetDate)), savingprediction));
 
 				targetDate.add(Calendar.MONTH, 1);
+				toFollow.put(calenderToYearMonth(targetDate), cureentSolde);
 				if (targetDate.getTime().getYear() > (Calendar.getInstance().getTime().getYear() + 50)) {
 					log.info("limit reached");
 					break;
 				}
 			}
+			if(client.getEmail()!=null)
+				MailUtility.sendEmail(client.getEmail(), "Budget calculation notification", MessageUtility.mapToHtml(toFollow,client));
 			return YearMonth.from(convertToLocalDateViaInstant(new Date(targetDate.getTime().getTime())));
 		} else {
 			// the client already have the amount of money
@@ -121,12 +132,12 @@ public class GestionBudgetController {
 
 	// table for each month how much he needs to save
 	public Map<YearMonth, Double> getHowReachTarget(Long idUser, Float targetMoney, YearMonth targetDate,
-			Long numeroCompte) {
+			Long numeroCompte) throws Exception {
 		Map<YearMonth, Double> savingsSched = new HashMap<YearMonth, Double>();
 		YearMonth currentDate = YearMonth.now();
 		// simple service
 		if (currentDate.isBefore(targetDate)) {
-			Client client = clientRepository.getById(idUser);
+			Client client = clientService.findById(idUser);
 			Double cureentSolde = client.getCompteList().stream().filter(c -> numeroCompte.equals(c.getNumeroCompte()))
 					.findFirst().get().getSolde();
 			Double toReachGap = targetMoney - cureentSolde;
@@ -162,7 +173,7 @@ public class GestionBudgetController {
 		JSONObject clientsJsonObject = new JSONObject();
 		clientsJsonObject.put("relation", "client");
 		clientsJsonObject.put("attributes", getJsonAtt());
-		List<Client> clients = clientRepository.findAll();
+		List<Client> clients = clientService.findAll();
 		for (Client client : clients) {
 			Map<YearMonth, Double> savings = transactionServiceImpl.getSavings(client);
 

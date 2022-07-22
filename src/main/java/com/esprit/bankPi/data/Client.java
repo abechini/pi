@@ -24,9 +24,9 @@ public class Client {
     private String name ;
     @Column(name = "firstname", unique = false, nullable = false, insertable = true, updatable = true)
     private String firstName ;
-    @Column(name = "address", unique = false, nullable = false, insertable = true, updatable = true)
+    @Column(name = "address", unique = false, nullable = true, insertable = true, updatable = true)
     private String  address ;
-    @Column(name = "email", unique = false, nullable = false, insertable = true, updatable = true)
+    @Column(name = "email", unique = false, nullable = true, insertable = true, updatable = true)
     private String  email ;
     @Column(name = "civilState", unique = false, nullable = false, insertable = true, updatable = true)
     private CivilState civilState ;

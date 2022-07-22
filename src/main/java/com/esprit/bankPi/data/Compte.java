@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -17,7 +16,10 @@ import javax.persistence.Table;
 import com.esprit.bankPi.enums.CompteType;
 import com.esprit.bankPi.enums.CurrencyEnum;
 import com.esprit.bankPi.util.CompteUtility;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 //JPA Annotations
 @Table(name = "data_Compte")
@@ -40,7 +42,10 @@ public class Compte implements Serializable {
 	private List<BankCarte> bankCartes;
 	@JsonIgnoreProperties("compteId")
 	private List<Income> incomes;
-	@JsonIgnoreProperties("compteList")
+	//@JsonIgnoreProperties("compteList")
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+	@JsonIdentityReference(alwaysAsId = true)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Client client;
 	private boolean isActive;
 	private double negativeCeiling;
@@ -54,7 +59,7 @@ public class Compte implements Serializable {
 			return numeroCompte;
 		}else {
 			Random value = new Random();
-			this.numeroCompte= Long.valueOf((long) (100000+ Math.random() * 10000000));
+			this.numeroCompte= Long.valueOf((long) (100000+ Math.random() * 100000));
 		}
 		return numeroCompte;
 	}
