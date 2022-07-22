@@ -13,5 +13,6 @@ public interface AgentRepository extends JpaRepository<Agent, Long> {
 	public Agent save(Agent agent);
 	public List<Agent> findAllByAgencyName(String agencyName) ;
 	public Agent findAgentById(Long id);
+	public List<Agent> findAllByAgencyId(long agencyId) ;
 
 }
