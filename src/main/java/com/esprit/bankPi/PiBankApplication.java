@@ -112,7 +112,7 @@ public class PiBankApplication {
 			listIncome.add(income);
 			compte.setIncomes(listIncome);
 			// compte.setClient(client);
-			agency.setName("amen");
+			agency.setName("Amen banque");
 			client.setAddress("tunis");
 			client.setSexe(Sexe.Male);
 			client.setAgency(agency);
@@ -121,13 +121,13 @@ public class PiBankApplication {
 			
 			client.setCivilState(CivilState.Married);
 			client.setDateOfBirth(new Date());
-			client.setEmail("aziz@bechini.tn");
+			client.setEmail("aziz.bechini@esprit.tn");
 			agencyRepository.save(agency);
-			client.setFirstName("aziz" + Math.random() * 100);
+			client.setFirstName("aziz");
 			client.setName("bechini");
 			compte.setSolde((Double) Math.random() * 100);
 			compte.setType(CompteType.SAVING);
-			client.setCin(Math.random() + "");
+			client.setCin(100000+Math.random()*100000 + "");
 			compte.setAcountFees(1.2d);
 			compte.setActive(true);
 			compte.setNegativeCeiling(10d);
