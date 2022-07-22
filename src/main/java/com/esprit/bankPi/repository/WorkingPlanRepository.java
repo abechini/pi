@@ -10,4 +10,5 @@ public interface WorkingPlanRepository extends JpaRepository<WorkingPlan,Long>{
 	
 @SuppressWarnings("unchecked")
 public WorkingPlan save(WorkingPlan workingPlan) ;
+public void deleteAll();
 }
